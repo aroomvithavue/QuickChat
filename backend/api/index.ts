@@ -8,6 +8,7 @@ import logger from "morgan";
 import http from "http";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
+import {chatRoomRouter} from '../chatroom/router';
 
 // Load environmental variables
 dotenv.config({});
@@ -74,6 +75,7 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 // Add routers from routes folder
+app.use('/api/chatRooms', chatRoomRouter);
 
 // Catch all the other routes and display error message
 app.all("*", (req: Request, res: Response) => {
