@@ -5,31 +5,75 @@
   <meta name="author" content="6.170 Staff">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="/stylesheets/style.css">
+  <script src="/scripts/chatroom.js"></script>
   <script src="/scripts/index.js"></script>
 </head>
 
 <body>
   <header>
-    <h1>Fritter</h1>
+    <h1>QuickChat</h1>
   </header>
 
   <main class="two-col">
     <section id="operations-container">
       <h2>Operations:</h2>
       <div class="scrollbox">
-        <form id="create-user">
 
-        <form id="sign-in">
-          <h3>Sign In</h3>
+        <form id="view-all-chats">
+          <h3>View All Chats</h3>
+          <input type="submit" value="View All Chats">
+        </form>
+
+        <form id="view-chat-by-keyword">
+          <h3>View Chat By Keyword</h3>
           <div>
-            <label for="username">Username:</label>
-            <input id="username" name="username">
+            <label for="key">Keyword:</label>
+            <input id="key" name="key">
+          </div>
+          <input type="submit" value="View Chat By Keyword">
+        </form>
+
+        <form id="create-chat">
+          <h3>Create Chat</h3>
+          <div>
+            <label for="keyword">Keyword:</label>
+            <textarea id="keyword" name="keyword"></textarea>
           </div>
           <div>
-            <label for="password">Password:</label>
-            <input id="password" name="password">
+            <label for="days">Days until expiration:</label>
+            <textarea id="days" name="days"></textarea>
           </div>
-          <input type="submit" value="Sign In">
+          <div>
+            <label for="hours">Hours until expiration:</label>
+            <textarea id="hours" name="hours"></textarea>
+          </div>
+          <input type="submit" value="Create Chat">
+        </form>
+
+        <form id="add-message">
+          <h3>Add Message</h3>
+          <div>
+            <label for="id">Chat Id:</label>
+            <input id="id" name="id">
+          </div>
+          <div>
+            <label for="message">Message:</label>
+            <textarea id="message" name="message"></textarea>
+          </div>
+          <div>
+            <label for="author">Author:</label>
+            <textarea id="author" name="author"></textarea>
+          </div>
+          <input type="submit" value="Add Message">
+        </form>
+
+        <form id="delete-chat">
+          <h3>Delete Chat</h3>
+          <div>
+            <label for="id">Chat Id:</label>
+            <input id="id" name="id">
+          </div>
+          <input type="submit" value="Delete Chat">
         </form>
 
       </div>

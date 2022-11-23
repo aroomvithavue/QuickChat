@@ -6,10 +6,10 @@ import ChatRoomCollection from './collection';
  * Checks if a chat room with keyword exists
  */
 const doesChatRoomWithKeyExist = async (req: Request, res: Response, next: NextFunction) => {
-  const chatRoom = await ChatRoomCollection.findByKeyword(req.params.keyword as string);
+  const chatRoom = await ChatRoomCollection.findByKeyword(req.query.keyword as string);
   if (!chatRoom) {
     res.status(404).json({
-      error: `Chat room with keyword of ${req.params.keyword} does not exist.`
+      error: `Chat room with keyword of ${req.query.keyword} does not exist.`
     });
     return;
   }
@@ -48,7 +48,7 @@ const isValidChatRoom = async (req: Request, res: Response, next: NextFunction) 
   const chatRoom = await ChatRoomCollection.findByKeyword(keyword);
   if (chatRoom) {
     res.status(400).json({
-      error: `Chat room with keyword of ${req.params.keyword} already exists.`
+      error: `Chat room with keyword of ${req.query.keyword} already exists.`
     });
     return;
   }

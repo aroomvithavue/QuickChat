@@ -67,10 +67,8 @@ const router = express.Router();
       const keyword = req.body.keyword as string;
       const chatRoom = await ChatRoomCollection.addOne(days, hours, keyword);
   
-      res.status(201).json({
-        message: 'Your chat room was created successfully.',
-        chatRoom: util.constructChatRoomResponse(chatRoom)
-      });
+      const response = util.constructChatRoomResponse(chatRoom);
+      res.status(201).json(response);
     }
   );
   
@@ -87,9 +85,7 @@ const router = express.Router();
     [chatRoomValidator.doesChatRoomExist],
     async (req: Request, res: Response) => {
       await ChatRoomCollection.deleteOne(req.params.chatRoomId);
-      res.status(200).json({
-        message: 'Your chat room was deleted successfully.'
-      });
+      res.status(200).json('Your chat room was deleted successfully.');
     }
   );
   
@@ -113,10 +109,8 @@ const router = express.Router();
       const author = req.body.author as string;
       const chatRoom = await ChatRoomCollection.updateOne(req.params.chatRoomId, message, author);
       
-      res.status(200).json({
-        message: 'Your chat room was updated successfully.',
-        chatRoom: util.constructChatRoomResponse(chatRoom)
-      });
+      const response = util.constructChatRoomResponse(chatRoom);
+      res.status(200).json(response);
     }
   );
 

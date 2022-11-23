@@ -11,11 +11,11 @@ class ChatRoomCollection {
    * @param chatKeyword keyword of chat
    * @returns {Promise<HydratedDocument<ChatRoom>>} - the newly created chat room
    */
-  static async addOne(days: number, hours: number, chatKeyword: string): Promise<HydratedDocument<ChatRoom>> {
+  static async addOne(days: string, hours: string, chatKeyword: string): Promise<HydratedDocument<ChatRoom>> {
     const date = new Date();
     const date2 = new Date();
-    date2.setDate(date2.getDate() + days);
-    date2.setHours(date2.getHours() + hours);
+    date2.setDate(date2.getDate() + Number(days));
+    date2.setHours(date2.getHours() + Number(hours));
     
     const chatroom = new ChatRoomModel({ 
       keyword: chatKeyword,

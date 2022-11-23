@@ -28,7 +28,11 @@ function showResponse(response) {
 
 // Map form (by id) to the function that should be called on submit
 const formsAndHandlers = {
-  "sign-in": signIn,
+  "view-all-chats": viewAllChatRooms,
+  "view-chat-by-keyword": viewChatRoomByKeyword,
+  "create-chat": createChatRoom,
+  "add-message": addMessageToChatRoom,
+  "delete-chat": deleteChatRoom
 };
 
 // Attach handlers to forms

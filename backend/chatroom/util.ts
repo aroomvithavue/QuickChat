@@ -31,6 +31,7 @@ const constructChatRoomResponse = (chatRoom: HydratedDocument<ChatRoom>): ChatRo
       versionKey: false // Cosmetics; prevents returning of __v property
     })
   };
+  
   return {
     ...chatRoomCopy,
     _id: chatRoomCopy._id.toString(),
