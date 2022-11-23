@@ -25,7 +25,7 @@ class ChatRoomCollection {
     });
     
     await chatroom.save();
-    return chatroom.populate("keyword");
+    return chatroom;
   }
 
   /**
@@ -35,7 +35,7 @@ class ChatRoomCollection {
    * @returns {Promise<HydratedDocument<ChatRoom>> | Promise<null> } - the chat room with the given id, if any
    */
   static async findOne(chatRoomId: Types.ObjectId | string): Promise<HydratedDocument<ChatRoom>> {
-    return ChatRoomModel.findOne({_id: chatRoomId}).populate("keyword");
+    return ChatRoomModel.findOne({_id: chatRoomId});
   }
 
   /**
@@ -45,7 +45,7 @@ class ChatRoomCollection {
    * @returns {Promise<HydratedDocument<ChatRoom>> | Promise<null> } - the chat room with the given keyword, if any
    */
    static async findByKeyword(chatKeyword: string): Promise<HydratedDocument<ChatRoom>> {
-    return ChatRoomModel.findOne({keyword: chatKeyword},).populate("keyword");
+    return ChatRoomModel.findOne({keyword: chatKeyword});
   }
 
   /**
@@ -54,7 +54,7 @@ class ChatRoomCollection {
    * @returns {Promise<HydratedDocument<ChatRoom>[]>} - an array of all of the chat rooms
    */
   static async findAll(): Promise<Array<HydratedDocument<ChatRoom>>> {
-    return ChatRoomModel.find({}).sort({dateCreated: -1}).populate("keyword");
+    return ChatRoomModel.find({}).sort({dateCreated: -1});
   }
 
   /**
@@ -70,7 +70,7 @@ class ChatRoomCollection {
     const messageDate = new Date();
     chatroom.messages.push({text: messageText, date: messageDate, author: messageAuthor});
     await chatroom.save();
-    return chatroom.populate("keyword");
+    return chatroom;
   }
 
   /**

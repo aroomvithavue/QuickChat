@@ -9,14 +9,6 @@ export type ChatRoom = {
   messages: Array<{text: String, date: Date, author: String}>;
 };
 
-export type PopulatedChatRoom = {
-  _id: Types.ObjectId;
-  keyword: string;
-  dateCreated: Date;
-  dateExpired: Date;
-  messages: Array<{text: String, date: Date, author: String}>;
-};
-
 const ChatRoomSchema = new Schema<ChatRoom>({
   keyword: {
     type: String,

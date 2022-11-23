@@ -54,17 +54,17 @@ const isValidChatRoom = async (req: Request, res: Response, next: NextFunction) 
   }
 
   const days = req.body.days as string;
-  if (Number(days) === NaN || Number(days) <= 0 || Number(days) !== parseInt(days)) {
+  if (Number(days) === NaN || Number(days) < 0 || Number(days) !== parseInt(days)) {
     res.status(400).json({
-      error: 'Days must be a positive integer.'
+      error: 'Days must be a non-negative integer.'
     });
     return;
   }
 
   const hours = req.body.hours as string;
-  if (Number(hours) === NaN || Number(hours) <= 0 || Number(hours) !== parseInt(hours)) {
+  if (Number(hours) === NaN || Number(hours) < 0 || Number(hours) !== parseInt(hours)) {
     res.status(400).json({
-      error: 'Hours must be a positive integer.'
+      error: 'Hours must be a non-negative integer.'
     });
     return;
   }

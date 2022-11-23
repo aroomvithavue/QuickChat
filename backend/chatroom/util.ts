@@ -1,12 +1,12 @@
-import type {HydratedDocument} from 'mongoose';
+import type {HydratedDocument, Types} from 'mongoose';
 import moment from 'moment';
-import type {ChatRoom, PopulatedChatRoom} from './model';
+import type {ChatRoom} from './model';
 
-type ChatRoomResponse = {
-  _id: string;
+export type ChatRoomResponse = {
+  _id: Types.ObjectId;
   keyword: string;
-  dateCreated: string;
-  dateExpired: string;
+  dateCreated: Date;
+  dateExpired: Date;
   messages: Array<{text: String, date: Date, author: String}>;
 };
 
@@ -26,19 +26,14 @@ const formatDate = (date: Date): string => moment(date).format('MMMM Do YYYY, h:
  * @returns {ChatRoomResponse} - the chat room object formatted for the frontend
  */
 const constructChatRoomResponse = (chatRoom: HydratedDocument<ChatRoom>): ChatRoomResponse => {
-  const chatRoomCopy: PopulatedChatRoom = {
+  const chatRoomCopy: ChatRoom = {
     ...chatRoom.toObject({
       versionKey: false // Cosmetics; prevents returning of __v property
     })
   };
   
   return {
-    ...chatRoomCopy,
-    _id: chatRoomCopy._id.toString(),
-    keyword: chatRoom.keyword,
-    dateCreated: formatDate(chatRoom.dateCreated),
-    dateExpired: formatDate(chatRoom.dateExpired),
-    messages: chatRoom.messages
+    ...chatRoomCopy
   };
 };
 
