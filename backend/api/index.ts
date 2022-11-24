@@ -9,6 +9,8 @@ import http from "http";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import {chatRoomRouter} from '../chatroom/router';
+import { Server } from "socket.io";
+import ChatRoomCollection from '../chatroom/collection'
 
 // Load environmental variables
 dotenv.config({});
@@ -88,4 +90,53 @@ server.listen(app.get("port"), () => {
   console.log(
     `Express server running at http://localhost:${app.get("port") as number}`
   );
+});
+
+// socket.io
+const io = new Server(server, { // create websocket endpoint so that server & client can talk to each other
+  cors: {
+      origin: "*",
+      methods: ['GET', "POST"]
+  }
+}); 
+
+const users : { [key: string]: string} = {}; // temporary array to save socketId-username pairs. In practice, use mongodb.
+
+io.on("connection", (socket) => {
+  console.log(`user ${socket.id} is connected.`);
+  socket.broadcast.emit('join', {
+    id: new Date().getTime(),
+    text: "A new user joined.",
+    username: "Server",
+    userId: "",
+  });
+  users[socket.id] = "Anonymous";
+
+  socket.on("join-room", data => {
+    socket.join(data.roomName);
+  });
+
+  socket.on("leave-room", data => {
+    socket.leave(data.roomName);
+  });
+
+  socket.on('message', async (data) => {
+    await ChatRoomCollection.updateOneByKeyword(data.roomName, data.text, data.username);
+    socket.to(data.roomName).emit('message:received', data);
+  });
+
+  socket.on('username', data => {
+    users[data.userId] = data.newUsername;
+    socket.broadcast.emit('username:received', data);
+  });
+
+  socket.on('disconnect', () => {
+      console.log(`user ${socket.id} left.`);
+      socket.broadcast.emit('leave', {
+        id: new Date().getTime(),
+        text: `User ${users[socket.id]} left.`,
+        username: "Server",
+        userId: "",
+      });
+  });
 });

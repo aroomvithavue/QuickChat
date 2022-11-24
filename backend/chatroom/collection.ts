@@ -73,6 +73,23 @@ class ChatRoomCollection {
     return chatroom;
   }
 
+    /**
+   * Update a chat by adding a new message. Differs from prior function in that it identifies
+   * the chat by keyword, rather than by id.
+   * 
+   * @param chatKeyword keyword of chat room
+   * @param messageText text of new message
+   * @param messageAuthor author of new message
+   * @returns {Promise<HydratedDocument<ChatRoom>>} - the newly updated chat room
+   */
+     static async updateOneByKeyword(chatKeyword: string | string, messageText: string, messageAuthor: string): Promise<HydratedDocument<ChatRoom>> {
+      const chatroom = await ChatRoomModel.findOne({keyword: chatKeyword});
+      const messageDate = new Date();
+      chatroom.messages.push({text: messageText, date: messageDate, author: messageAuthor});
+      await chatroom.save();
+      return chatroom;
+    }
+
   /**
    * Deletes a chat room by id.
    * 
