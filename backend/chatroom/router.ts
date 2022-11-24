@@ -1,9 +1,9 @@
-import type {NextFunction, Request, Response} from "express";
-import express from "express";
-import ChatRoomCollection from "./collection";
-import * as chatRoomValidator from "./middleware";
-import * as util from "./util";
-import {Types} from "mongoose";
+import type {NextFunction, Request, Response} from 'express';
+import express from 'express';
+import ChatRoomCollection from './collection';
+import * as chatRoomValidator from './middleware';
+import * as util from './util';
+import {Types} from 'mongoose';
 
 const router = express.Router();
 
@@ -24,26 +24,26 @@ const router = express.Router();
  * @throws {404} - if no chat room has given keyword
  *
  */
- router.get(
-    '/',
-    async (req: Request, res: Response, next: NextFunction) => {
-      // Check if author query parameter was supplied
-      if (req.query.keyword !== undefined) {
-        next();
-        return;
-      }
-  
-      const allChatRooms = await ChatRoomCollection.findAll();
-      const response = allChatRooms.map(util.constructChatRoomResponse);
-      res.status(200).json(response);
-    },
-    [chatRoomValidator.doesChatRoomWithKeyExist],
-    async (req: Request, res: Response) => {
-      const chatRoom = await ChatRoomCollection.findByKeyword(req.query.keyword as string);
-      const response = util.constructChatRoomResponse(chatRoom);
-      res.status(200).json(response);
+router.get(
+  '/',
+  async (req: Request, res: Response, next: NextFunction) => {
+    // Check if author query parameter was supplied
+    if (req.query.keyword !== undefined) {
+      next();
+      return;
     }
-  );
+
+    const allChatRooms = await ChatRoomCollection.findAll();
+    const response = allChatRooms.map(util.constructChatRoomResponse);
+    res.status(200).json(response);
+  },
+  [chatRoomValidator.doesChatRoomWithKeyExist],
+  async (req: Request, res: Response) => {
+    const chatRoom = await ChatRoomCollection.findByKeyword(req.query.keyword as string);
+    const response = util.constructChatRoomResponse(chatRoom);
+    res.status(200).json(response);
+  }
+);
 
 /**
  * Create a new chat room.
@@ -58,20 +58,20 @@ const router = express.Router();
  * @throws {400} - if days is not a positive integer
  * @throws {400} - if hours is not a positive integer
  */
- router.post(
-    '/',
-    [chatRoomValidator.isValidChatRoom],
-    async (req: Request, res: Response) => {
-      const days = req.body.days as string;
-      const hours = req.body.hours as string;
-      const keyword = req.body.keyword as string;
-      const chatRoom = await ChatRoomCollection.addOne(days, hours, keyword);
-  
-      const response = util.constructChatRoomResponse(chatRoom);
-      res.status(201).json(response);
-    }
-  );
-  
+router.post(
+  '/',
+  [chatRoomValidator.isValidChatRoom],
+  async (req: Request, res: Response) => {
+    const days = req.body.days as string;
+    const hours = req.body.hours as string;
+    const keyword = req.body.keyword as string;
+    const chatRoom = await ChatRoomCollection.addOne(days, hours, keyword);
+
+    const response = util.constructChatRoomResponse(chatRoom);
+    res.status(201).json(response);
+  }
+);
+
 /**
  * Delete a chat room.
  *
@@ -80,15 +80,15 @@ const router = express.Router();
  * @return {string} - a success message
  * @throws {404} - if the chatRoomId is not valid
  */
-  router.delete(
-    '/:chatRoomId?',
-    [chatRoomValidator.doesChatRoomExist],
-    async (req: Request, res: Response) => {
-      await ChatRoomCollection.deleteOne(req.params.chatRoomId);
-      res.status(200).json('Your chat room was deleted successfully.');
-    }
-  );
-  
+router.delete(
+  '/:chatRoomId?',
+  [chatRoomValidator.doesChatRoomExist],
+  async (req: Request, res: Response) => {
+    await ChatRoomCollection.deleteOne(req.params.chatRoomId);
+    res.status(200).json('Your chat room was deleted successfully.');
+  }
+);
+
 /**
  * Modify a chat room (by adding a message).
  *
@@ -101,17 +101,17 @@ const router = express.Router();
  * @throws {400} - if the message is empty
  * @throws {400} - if the author is empty
  */
-  router.patch(
-    '/:chatRoomId?',
-    [chatRoomValidator.doesChatRoomExist, chatRoomValidator.isValidMessage],
-    async (req: Request, res: Response) => {
-      const message = req.body.message as string;
-      const author = req.body.author as string;
-      const chatRoom = await ChatRoomCollection.updateOne(req.params.chatRoomId, message, author);
-      
-      const response = util.constructChatRoomResponse(chatRoom);
-      res.status(200).json(response);
-    }
-  );
+router.patch(
+  '/:chatRoomId?',
+  [chatRoomValidator.doesChatRoomExist, chatRoomValidator.isValidMessage],
+  async (req: Request, res: Response) => {
+    const message = req.body.message as string;
+    const author = req.body.author as string;
+    const chatRoom = await ChatRoomCollection.updateOne(req.params.chatRoomId, message, author);
+
+    const response = util.constructChatRoomResponse(chatRoom);
+    res.status(200).json(response);
+  }
+);
 
 export {router as chatRoomRouter};

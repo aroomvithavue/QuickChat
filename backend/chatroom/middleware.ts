@@ -20,18 +20,18 @@ const doesChatRoomWithKeyExist = async (req: Request, res: Response, next: NextF
 /**
  * Checks if a chat room with chatRoomId exists
  */
- const doesChatRoomExist = async (req: Request, res: Response, next: NextFunction) => {
-    const validFormat = Types.ObjectId.isValid(req.params.chatRoomId);
-    const chatRoom = validFormat ? await ChatRoomCollection.findOne(req.params.chatRoomId) : '';
-    if (!chatRoom) {
-      res.status(404).json({
-        error: `Chat room with chat room ID ${req.params.chatRoomId} does not exist.`
-      });
-      return;
-    }
-  
-    next();
-  };
+const doesChatRoomExist = async (req: Request, res: Response, next: NextFunction) => {
+  const validFormat = Types.ObjectId.isValid(req.params.chatRoomId);
+  const chatRoom = validFormat ? await ChatRoomCollection.findOne(req.params.chatRoomId) : '';
+  if (!chatRoom) {
+    res.status(404).json({
+      error: `Chat room with chat room ID ${req.params.chatRoomId} does not exist.`
+    });
+    return;
+  }
+
+  next();
+};
 
 /**
  * Checks if the new chat room is valid.
@@ -44,7 +44,7 @@ const isValidChatRoom = async (req: Request, res: Response, next: NextFunction) 
     });
     return;
   }
-  
+
   const chatRoom = await ChatRoomCollection.findByKeyword(keyword);
   if (chatRoom) {
     res.status(400).json({
@@ -75,25 +75,25 @@ const isValidChatRoom = async (req: Request, res: Response, next: NextFunction) 
 /**
  * Checks if the new message is valid.
  */
- const isValidMessage = async (req: Request, res: Response, next: NextFunction) => {
-    const message = req.body.message as string;
-    if (!message.trim()) {
-        res.status(400).json({
-        error: 'Message must be at least one character long.'
-        });
-        return;
-    }
+const isValidMessage = async (req: Request, res: Response, next: NextFunction) => {
+  const message = req.body.message as string;
+  if (!message.trim()) {
+    res.status(400).json({
+      error: 'Message must be at least one character long.'
+    });
+    return;
+  }
 
-    const author = req.body.author as string;
-    if (!author.trim()) {
-        res.status(400).json({
-        error: 'Author must be at least one character long.'
-        });
-        return;
-    }
-  
-    next();
-  };
+  const author = req.body.author as string;
+  if (!author.trim()) {
+    res.status(400).json({
+      error: 'Author must be at least one character long.'
+    });
+    return;
+  }
+
+  next();
+};
 
 export {
   doesChatRoomWithKeyExist,

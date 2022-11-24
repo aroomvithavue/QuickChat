@@ -1,18 +1,18 @@
 // This file must be in the /api folder for Vercel to detect it as a serverless function
-import type { Request, Response } from "express";
-import express from "express";
-import { engine } from "express-handlebars";
-import session from "express-session";
-import path from "path";
-import logger from "morgan";
-import http from "http";
-import mongoose from "mongoose";
-import dotenv from "dotenv";
+import type {Request, Response} from 'express';
+import express from 'express';
+import {engine} from 'express-handlebars';
+import session from 'express-session';
+import path from 'path';
+import logger from 'morgan';
+import http from 'http';
+import mongoose from 'mongoose';
+import dotenv from 'dotenv';
 import {chatRoomRouter} from '../chatroom/router';
-import { Server } from "socket.io";
-import ChatRoomCollection from '../chatroom/collection'
+import {Server} from 'socket.io';
+import ChatRoomCollection from '../chatroom/collection';
 
-var cors = require("cors");
+const cors = require('cors');
 
 // Load environmental variables
 dotenv.config({});
@@ -20,20 +20,20 @@ dotenv.config({});
 // Connect to mongoDB
 const mongoConnectionUrl = process.env.MONGO_SRV;
 if (!mongoConnectionUrl) {
-  throw new Error("Please add the MongoDB connection SRV as 'MONGO_SRV'");
+  throw new Error('Please add the MongoDB connection SRV as \'MONGO_SRV\'');
 }
 
 mongoose
   .connect(mongoConnectionUrl)
-  .then((m) => {
-    console.log("Connected to MongoDB");
+  .then(m => {
+    console.log('Connected to MongoDB');
     const db = m.connection;
   })
-  .catch((err) => {
+  .catch(err => {
     console.error(`Error connecting to MongoDB: ${err.message as string}`);
   });
 
-mongoose.connection.on("error", (err) => {
+mongoose.connection.on('error', err => {
   console.error(err);
 });
 
@@ -44,31 +44,31 @@ const app = express();
 app.use(cors());
 
 // Declare the root directory
-app.use(express.static(path.join(__dirname, "../public")));
+app.use(express.static(path.join(__dirname, '../public')));
 
 // View engine setup
-app.engine("html", engine({ extname: ".html", defaultLayout: false }));
-app.set("view engine", "html");
-app.set("views", path.join(__dirname, "../public"));
+app.engine('html', engine({extname: '.html', defaultLayout: false}));
+app.set('view engine', 'html');
+app.set('views', path.join(__dirname, '../public'));
 
 // Set the port
-app.set("port", process.env.PORT || 3000);
+app.set('port', process.env.PORT || 3000);
 
 // Log requests in the terminal
-app.use(logger("dev"));
+app.use(logger('dev'));
 
 // Parse incoming requests with JSON payloads ('content-type: application/json' in header)
 app.use(express.json());
 
 // Parse incoming requests with urlencoded payloads ('content-type: application/x-www-form-urlencoded' in header)
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({extended: false}));
 
 // Initialize cookie session
 app.use(
   session({
-    secret: "61040",
+    secret: '61040',
     resave: true,
-    saveUninitialized: false,
+    saveUninitialized: false
   })
 );
 
@@ -77,56 +77,61 @@ app.use(
 // app.use(userValidator.isCurrentSessionUserExists);
 
 // GET home page
-app.get("/", (req: Request, res: Response) => {
-  res.render("index");
+app.get('/', (req: Request, res: Response) => {
+  res.render('index');
 });
 
 // Add routers from routes folder
 app.use('/api/chatRooms', chatRoomRouter);
 
 // Catch all the other routes and display error message
-app.all("*", (req: Request, res: Response) => {
-  res.status(400).render("error");
+app.all('*', (req: Request, res: Response) => {
+  res.status(400).render('error');
 });
 
 // Create server to listen to request at specified port
 const server = http.createServer(app);
-server.listen(app.get("port"), () => {
+server.listen(app.get('port'), () => {
   console.log(
-    `Express server running at http://localhost:${app.get("port") as number}`
+    `Express server running at http://localhost:${app.get('port') as number}`
   );
 });
 
-// socket.io
-const io = new Server(server, { // create websocket endpoint so that server & client can talk to each other
+// Socket.io
+const io = new Server(server, {
+  // Create websocket endpoint so that server & client can talk to each other
   cors: {
-      origin: "*",
-      methods: ['GET', "POST"]
+    origin: '*',
+    methods: ['GET', 'POST']
   }
-}); 
+});
 
-const users : { [key: string]: string} = {}; // temporary array to save socketId-username pairs. In practice, use mongodb.
+const users: Record<string, string> = {}; // Temporary array to save socketId-username pairs. In practice, use mongodb.
 
-io.on("connection", (socket) => {
+io.on('connection', socket => {
   console.log(`user ${socket.id} is connected.`);
   socket.broadcast.emit('join', {
     id: new Date().getTime(),
-    text: "A new user joined.",
-    username: "Server",
-    userId: "",
+    text: 'A new user joined.',
+    username: 'Server',
+    userId: ''
   });
-  users[socket.id] = "Anonymous";
+  users[socket.id] = 'Anonymous';
 
-  socket.on("join-room", data => {
+  socket.on('join-room', data => {
     socket.join(data.roomName);
   });
 
-  socket.on("leave-room", data => {
+  socket.on('leave-room', data => {
     socket.leave(data.roomName);
   });
 
-  socket.on('message', async (data) => {
-    await ChatRoomCollection.updateOneByKeyword(data.roomName, data.text, data.username);
+  socket.on('message', async data => {
+    await ChatRoomCollection.updateOneByKeyword(
+      data.roomName,
+      data.text,
+      data.username
+    );
     socket.to(data.roomName).emit('message:received', data);
   });
 
@@ -136,12 +141,13 @@ io.on("connection", (socket) => {
   });
 
   socket.on('disconnect', () => {
-      console.log(`user ${socket.id} left.`);
-      socket.broadcast.emit('leave', {
-        id: new Date().getTime(),
-        text: `User ${users[socket.id]} left.`,
-        username: "Server",
-        userId: "",
-      });
+    console.log(`user ${socket.id} left.`);
+    socket.broadcast.emit('leave', {
+      id: new Date().getTime(),
+      text: `User ${users[socket.id]} left.`,
+      username: 'Server',
+      userId: ''
+    });
   });
 });
+

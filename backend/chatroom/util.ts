@@ -7,7 +7,7 @@ export type ChatRoomResponse = {
   keyword: string;
   dateCreated: Date;
   dateExpired: Date;
-  messages: Array<{text: String, date: Date, author: String}>;
+  messages: Array<{text: string; date: Date; author: string}>;
 };
 
 /**
@@ -31,7 +31,7 @@ const constructChatRoomResponse = (chatRoom: HydratedDocument<ChatRoom>): ChatRo
       versionKey: false // Cosmetics; prevents returning of __v property
     })
   };
-  
+
   return {
     ...chatRoomCopy
   };
