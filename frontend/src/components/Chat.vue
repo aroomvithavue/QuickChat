@@ -125,8 +125,11 @@ export default {
       this.joinedRoom = room;
 
       // retrieve the messages for this room
-      // TODO - MAKE SURE URL IS CORRECT FOR THE SERVER
-      const url = `api/chatRooms?keyword=${room}`;
+      const isProd = process.env.NODE_ENV === "production";
+      const url =
+        (isProd
+          ? "https://quickchat-api-61040.herokuapp.com/"
+          : "http://localhost:3000/") + `api/chatRooms?keyword=${room}`;
       //   const url = `http://localhost:3000/api/chatRooms?keyword=${room}`;
 
       try {
