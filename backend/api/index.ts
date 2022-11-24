@@ -12,6 +12,8 @@ import {chatRoomRouter} from '../chatroom/router';
 import { Server } from "socket.io";
 import ChatRoomCollection from '../chatroom/collection'
 
+var cors = require("cors");
+
 // Load environmental variables
 dotenv.config({});
 
@@ -37,6 +39,9 @@ mongoose.connection.on("error", (err) => {
 
 // Initalize an express app
 const app = express();
+
+// Set CORS to allow all
+app.use(cors());
 
 // Declare the root directory
 app.use(express.static(path.join(__dirname, "../public")));
