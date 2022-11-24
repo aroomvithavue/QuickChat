@@ -1,12 +1,17 @@
 <template>
   <div id="app" class="mx-auto">
-    <nav>
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </nav>
-    <router-view />
+    <ChatPage />
   </div>
 </template>
+
+<script>
+import ChatPage from "@/components/Chat.vue";
+
+export default {
+  name: "App",
+  components: { ChatPage },
+};
+</script>
 
 <style>
 #app {
