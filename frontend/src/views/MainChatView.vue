@@ -6,8 +6,8 @@
 </template>
 
 <script>
-import Chat from "../components/Chat.vue";
-import SidebarView from "../components/Sidebar.vue";
+import Chat from "@/components/Chat/Chat.vue";
+import SidebarView from "@/components/Chat/Sidebar.vue";
 
 export default {
   name: "MainChat",

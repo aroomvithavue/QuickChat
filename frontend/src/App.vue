@@ -1,15 +1,18 @@
 <template>
   <div id="app" class="mx-auto">
-    <MainChat />
+    <header>
+      <TopHeader />
+    </header>
+    <router-view />
   </div>
 </template>
 
 <script>
-import MainChat from "@/components/MainChat.vue";
+import TopHeader from "@/components/common/TopHeader.vue";
 
 export default {
   name: "App",
-  components: { MainChat },
+  components: { TopHeader },
 };
 </script>
 

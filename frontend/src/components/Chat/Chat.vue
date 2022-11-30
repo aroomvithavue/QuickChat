@@ -41,7 +41,6 @@
 
 <script>
 import io from "socket.io-client";
-import fetchFromApi from "../utils.js";
 
 export default {
   name: "ChatPage",
