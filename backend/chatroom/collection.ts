@@ -1,26 +1,38 @@
-import type {HydratedDocument, Types} from 'mongoose';
-import type {ChatRoom} from './model';
-import ChatRoomModel from './model';
+import type { HydratedDocument, Types } from "mongoose";
+import type { ChatRoom } from "./model";
+import ChatRoomModel from "./model";
+import { generateKeyword } from "./util";
 
 class ChatRoomCollection {
   /**
    * Create a new chat room.
    *
-   * @param duration time until chat expires
-   * @param chatKeyword keyword of chat
+   * @param days days until chat expires
+   * @param hours until chat expires
    * @returns {Promise<HydratedDocument<ChatRoom>>} - the newly created chat room
    */
-  static async addOne(days: string, hours: string, chatKeyword: string): Promise<HydratedDocument<ChatRoom>> {
+  static async addOne(
+    days: string,
+    hours: string
+  ): Promise<HydratedDocument<ChatRoom>> {
     const date = new Date();
     const date2 = new Date();
     date2.setDate(date2.getDate() + Number(days));
     date2.setHours(date2.getHours() + Number(hours));
+    let keyword: string = generateKeyword();
+    let room = await ChatRoomModel.findOne({ keyword });
+
+    // If keyword is already in use pick a new one.
+    while (room != null) {
+      keyword = generateKeyword();
+      room = await ChatRoomModel.findOne({ keyword });
+    }
 
     const chatroom = new ChatRoomModel({
-      keyword: chatKeyword,
+      keyword,
       dateCreated: date,
       dateExpired: date2,
-      messages: []
+      messages: [],
     });
 
     await chatroom.save();

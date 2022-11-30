@@ -64,8 +64,7 @@ router.post(
   async (req: Request, res: Response) => {
     const days = req.body.days as string;
     const hours = req.body.hours as string;
-    const keyword = req.body.keyword as string;
-    const chatRoom = await ChatRoomCollection.addOne(days, hours, keyword);
+    const chatRoom = await ChatRoomCollection.addOne(days, hours);
 
     const response = util.constructChatRoomResponse(chatRoom);
     res.status(201).json(response);

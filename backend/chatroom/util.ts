@@ -37,6 +37,8 @@ const constructChatRoomResponse = (chatRoom: HydratedDocument<ChatRoom>): ChatRo
   };
 };
 
-export {
-  constructChatRoomResponse
+const generateKeyword = (): string => {
+  return words[Math.floor(Math.random() * words.length)];
 };
+
+export { constructChatRoomResponse, generateKeyword };

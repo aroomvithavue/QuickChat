@@ -36,23 +36,11 @@ const doesChatRoomExist = async (req: Request, res: Response, next: NextFunction
 /**
  * Checks if the new chat room is valid.
  */
-const isValidChatRoom = async (req: Request, res: Response, next: NextFunction) => {
-  const keyword = req.body.keyword as string;
-  if (!keyword.trim()) {
-    res.status(400).json({
-      error: 'Keyword must be at least one character long.'
-    });
-    return;
-  }
-
-  const chatRoom = await ChatRoomCollection.findByKeyword(keyword);
-  if (chatRoom) {
-    res.status(400).json({
-      error: `Chat room with keyword of ${req.query.keyword} already exists.`
-    });
-    return;
-  }
-
+const isValidChatRoom = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const days = req.body.days as string;
   if (Number(days) === NaN || Number(days) < 0 || Number(days) !== parseInt(days)) {
     res.status(400).json({
