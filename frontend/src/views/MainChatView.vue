@@ -2,19 +2,25 @@
   <main class="flex">
     <!-- Side Bar Code -->
     <div class="flex flex-col w-1/5 h-screen border-r-4">
-      <div class="mt-10">
-        <h1 class="font-bold">Keyword</h1>
-        <p>yellkey</p>
+      <div v-if="joinedRoom.length === 0">
+        <h1 class="mt-10 text-2xl font-bold">No Room Joined Yet!</h1>
       </div>
-      <div class="mt-10">
-        <h1 class="font-bold">Participants</h1>
-        <p>RoomView101</p>
+
+      <div v-else>
+        <div class="mt-10">
+          <h1 class="font-bold">Keyword</h1>
+          <p>{{ joinedRoom }}</p>
+        </div>
+        <div class="mt-10">
+          <h1 class="font-bold">Participants</h1>
+          <p>RoomView101</p>
+        </div>
+        <div class="mt-10">
+          <h1 class="font-bold">Vibe</h1>
+          <p>some emojis</p>
+        </div>
       </div>
-      <div class="mt-10">
-        <h1 class="font-bold">Vibe</h1>
-        <p>some emojis</p>
-      </div>
-      <footer class="mt-auto py-10">
+      <footer v-if="joinedRoom.length !== 0" class="mt-auto py-10">
         <button class="btn mt-2 max-w-xs mt-10">Export Chat</button>
         <button
           v-if="joinedRoom.length !== 0"
@@ -52,7 +58,6 @@
         </div>
       </section>
       <section v-else>
-        <h2 class="font-bold">Room: {{ joinedRoom }}</h2>
         <div
           class="chat chat-start"
           v-for="message in messages"
@@ -76,37 +81,17 @@
             type="button"
             class="p-2 text-gray-500 rounded-lg cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600"
           >
-            <svg
-              aria-hidden="true"
-              class="w-6 h-6"
-              fill="blue"
-              viewBox="0 0 20 20"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                fill-rule="evenodd"
-                d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 100-2 1 1 0 000 2zm7-1a1 1 0 11-2 0 1 1 0 012 0zm-.464 5.535a1 1 0 10-1.415-1.414 3 3 0 01-4.242 0 1 1 0 00-1.415 1.414 5 5 0 007.072 0z"
-                clip-rule="evenodd"
-              ></path>
-            </svg>
+            <img
+              src="https://img.icons8.com/ios-glyphs/30/000000/question--v1.png"
+            />
           </button>
           <button
             type="button"
             class="p-2 text-gray-500 rounded-lg cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600"
           >
-            <svg
-              aria-hidden="true"
-              class="w-6 h-6"
-              fill="blue"
-              viewBox="0 0 20 20"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                fill-rule="evenodd"
-                d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 100-2 1 1 0 000 2zm7-1a1 1 0 11-2 0 1 1 0 012 0zm-.464 5.535a1 1 0 10-1.415-1.414 3 3 0 01-4.242 0 1 1 0 00-1.415 1.414 5 5 0 007.072 0z"
-                clip-rule="evenodd"
-              ></path>
-            </svg>
+            <img
+              src="https://img.icons8.com/material-outlined/30/null/smiling.png"
+            />
           </button>
           <textarea
             id="chat"
@@ -132,6 +117,12 @@
               ></path>
             </svg>
             <span class="sr-only">Send message</span>
+          </button>
+          <button
+            type="button"
+            class="p-2 text-gray-500 rounded-lg cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600"
+          >
+            <img src="https://img.icons8.com/windows/32/null/file-upload.png" />
           </button>
         </div>
       </footer>
