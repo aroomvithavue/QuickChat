@@ -1,13 +1,14 @@
-import type {HydratedDocument, Types} from 'mongoose';
-import moment from 'moment';
-import type {ChatRoom} from './model';
+import type { HydratedDocument, Types } from "mongoose";
+import moment from "moment";
+import type { ChatRoom } from "./model";
+import { words } from "../common/wordlist";
 
 export type ChatRoomResponse = {
   _id: Types.ObjectId;
   keyword: string;
   dateCreated: Date;
   dateExpired: Date;
-  messages: Array<{text: string; date: Date; author: string}>;
+  messages: Array<{ text: string; date: Date; author: string }>;
 };
 
 /**
@@ -16,7 +17,8 @@ export type ChatRoomResponse = {
  * @param {Date} date - A date object
  * @returns {string} - formatted date as string
  */
-const formatDate = (date: Date): string => moment(date).format('MMMM Do YYYY, h:mm:ss a');
+const formatDate = (date: Date): string =>
+  moment(date).format("MMMM Do YYYY, h:mm:ss a");
 
 /**
  * Transform a raw ChatRoom object from the database into an object
@@ -25,15 +27,17 @@ const formatDate = (date: Date): string => moment(date).format('MMMM Do YYYY, h:
  * @param {HydratedDocument<ChatRoom>} chatRoom - a chat room
  * @returns {ChatRoomResponse} - the chat room object formatted for the frontend
  */
-const constructChatRoomResponse = (chatRoom: HydratedDocument<ChatRoom>): ChatRoomResponse => {
+const constructChatRoomResponse = (
+  chatRoom: HydratedDocument<ChatRoom>
+): ChatRoomResponse => {
   const chatRoomCopy: ChatRoom = {
     ...chatRoom.toObject({
-      versionKey: false // Cosmetics; prevents returning of __v property
-    })
+      versionKey: false, // Cosmetics; prevents returning of __v property
+    }),
   };
 
   return {
-    ...chatRoomCopy
+    ...chatRoomCopy,
   };
 };
 

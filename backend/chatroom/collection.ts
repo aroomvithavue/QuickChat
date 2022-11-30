@@ -45,8 +45,10 @@ class ChatRoomCollection {
    * @param chatRoomId id of chat room to find
    * @returns {Promise<HydratedDocument<ChatRoom>> | Promise<null> } - the chat room with the given id, if any
    */
-  static async findOne(chatRoomId: Types.ObjectId | string): Promise<HydratedDocument<ChatRoom>> {
-    return ChatRoomModel.findOne({_id: chatRoomId});
+  static async findOne(
+    chatRoomId: Types.ObjectId | string
+  ): Promise<HydratedDocument<ChatRoom>> {
+    return ChatRoomModel.findOne({ _id: chatRoomId });
   }
 
   /**
@@ -55,8 +57,10 @@ class ChatRoomCollection {
    * @param chatKeyword keyword of chat room
    * @returns {Promise<HydratedDocument<ChatRoom>> | Promise<null> } - the chat room with the given keyword, if any
    */
-  static async findByKeyword(chatKeyword: string): Promise<HydratedDocument<ChatRoom>> {
-    return ChatRoomModel.findOne({keyword: chatKeyword});
+  static async findByKeyword(
+    chatKeyword: string
+  ): Promise<HydratedDocument<ChatRoom>> {
+    return ChatRoomModel.findOne({ keyword: chatKeyword });
   }
 
   /**
@@ -65,7 +69,7 @@ class ChatRoomCollection {
    * @returns {Promise<HydratedDocument<ChatRoom>[]>} - an array of all of the chat rooms
    */
   static async findAll(): Promise<Array<HydratedDocument<ChatRoom>>> {
-    return ChatRoomModel.find({}).sort({dateCreated: -1});
+    return ChatRoomModel.find({}).sort({ dateCreated: -1 });
   }
 
   /**
@@ -76,10 +80,18 @@ class ChatRoomCollection {
    * @param messageAuthor author of new message
    * @returns {Promise<HydratedDocument<ChatRoom>>} - the newly updated chat room
    */
-  static async updateOne(chatRoomId: Types.ObjectId | string, messageText: string, messageAuthor: string): Promise<HydratedDocument<ChatRoom>> {
-    const chatroom = await ChatRoomModel.findOne({_id: chatRoomId});
+  static async updateOne(
+    chatRoomId: Types.ObjectId | string,
+    messageText: string,
+    messageAuthor: string
+  ): Promise<HydratedDocument<ChatRoom>> {
+    const chatroom = await ChatRoomModel.findOne({ _id: chatRoomId });
     const messageDate = new Date();
-    chatroom.messages.push({text: messageText, date: messageDate, author: messageAuthor});
+    chatroom.messages.push({
+      text: messageText,
+      date: messageDate,
+      author: messageAuthor,
+    });
     await chatroom.save();
     return chatroom;
   }
@@ -93,10 +105,18 @@ class ChatRoomCollection {
    * @param messageAuthor author of new message
    * @returns {Promise<HydratedDocument<ChatRoom>>} - the newly updated chat room
    */
-  static async updateOneByKeyword(chatKeyword: string | string, messageText: string, messageAuthor: string): Promise<HydratedDocument<ChatRoom>> {
-    const chatroom = await ChatRoomModel.findOne({keyword: chatKeyword});
+  static async updateOneByKeyword(
+    chatKeyword: string | string,
+    messageText: string,
+    messageAuthor: string
+  ): Promise<HydratedDocument<ChatRoom>> {
+    const chatroom = await ChatRoomModel.findOne({ keyword: chatKeyword });
     const messageDate = new Date();
-    chatroom.messages.push({text: messageText, date: messageDate, author: messageAuthor});
+    chatroom.messages.push({
+      text: messageText,
+      date: messageDate,
+      author: messageAuthor,
+    });
     await chatroom.save();
     return chatroom;
   }
@@ -107,8 +127,10 @@ class ChatRoomCollection {
    * @param chatRoomId id of chat room
    * @returns {Promise<Boolean>} - true if the chat room has been deleted, false otherwise
    */
-  static async deleteOne(chatRoomId: Types.ObjectId | string): Promise<boolean> {
-    const chatRoom = await ChatRoomModel.findOneAndDelete({_id: chatRoomId});
+  static async deleteOne(
+    chatRoomId: Types.ObjectId | string
+  ): Promise<boolean> {
+    const chatRoom = await ChatRoomModel.findOneAndDelete({ _id: chatRoomId });
     return chatRoom !== null;
   }
 }
