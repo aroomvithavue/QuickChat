@@ -1,15 +1,15 @@
 <template>
   <div id="app" class="mx-auto">
-    <ChatPage />
+    <MainChat />
   </div>
 </template>
 
 <script>
-import ChatPage from "@/components/Chat.vue";
+import MainChat from "@/components/MainChat.vue";
 
 export default {
   name: "App",
-  components: { ChatPage },
+  components: { MainChat },
 };
 </script>
 
