@@ -109,7 +109,6 @@ const io = new Server(server, {
 const users: Record<string, string> = {}; // Temporary array to save socketId-username pairs. In practice, use mongodb.
 
 io.on('connection', socket => {
-  console.log(`user ${socket.id} is connected.`);
   socket.broadcast.emit('join', {
     id: new Date().getTime(),
     text: 'A new user joined.',
@@ -141,7 +140,6 @@ io.on('connection', socket => {
   });
 
   socket.on('disconnect', () => {
-    console.log(`user ${socket.id} left.`);
     socket.broadcast.emit('leave', {
       id: new Date().getTime(),
       text: `User ${users[socket.id]} left.`,
