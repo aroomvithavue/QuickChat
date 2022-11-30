@@ -1,10 +1,10 @@
 <template>
-  <main>Sidebar Technically</main>
+  <main>Chat Header Technically</main>
 </template>
 
 <script>
 export default {
-  name: "SidebarView",
+  name: "ChatHeader",
   components: {},
 };
 </script>
