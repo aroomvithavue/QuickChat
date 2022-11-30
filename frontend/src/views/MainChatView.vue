@@ -39,7 +39,9 @@
 
     <div class="flex flex-col w-3/4">
       <!-- Chat Header Code -->
-      <header class="py-4 border-b-4"><ChatHeader /></header>
+      <header class="py-4 border-b-4">
+        <ChatHeader />
+      </header>
       <!-- Chat Header Code -->
 
       <!-- Chat Code -->
@@ -50,7 +52,19 @@
         </div>
       </section>
       <section v-else>
-        <h2>{{ joinedRoom }}</h2>
+        <h2 class="font-bold">Room: {{ joinedRoom }}</h2>
+        <div
+          class="chat chat-start"
+          v-for="message in messages"
+          :key="message.id"
+        >
+          <div class="chat-header">
+            {{ message.author }}
+          </div>
+          <div class="chat-bubble">{{ message.text }}</div>
+        </div>
+      </section>
+      <footer v-if="joinedRoom.length !== 0" class="mt-auto py-4 border-t-4">
         <input
           type="text"
           class="textarea textarea-bordered"
@@ -58,13 +72,8 @@
           v-model="text"
         />
         <button class="btn" @click="sendMessage">Send message</button>
-        <div v-for="message in messages" :key="message.id">
-          <b>
-            {{ message.author }}
-          </b>
-          : {{ message.text }}
-        </div>
-      </section>
+      </footer>
+
       <!-- Chat Code -->
     </div>
   </main>
