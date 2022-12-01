@@ -300,32 +300,22 @@ export default {
       });
     },
     voteConfused() {
-      // eslint-disable-next-line no-constant-condition
-      if ("true" === "true") {
-        this.confusedCount += 1;
-      } else {
-        // Emit Confused Reaction
-        const confusedVote = {
-          reaction: "confused",
-          user: this.username,
-          chatroomKey: this.joinedRoom,
-        };
-        this.socketInstance.emit("confusedVote", confusedVote); // send confused vote to others
-      }
+      // Emit Confused Reaction
+      const confusedVote = {
+        reaction: "confused",
+        user: this.username,
+        chatroomKey: this.joinedRoom,
+      };
+      this.socketInstance.emit("confusedVote", confusedVote); // send confused vote to others
     },
     async voteHappy() {
-      // eslint-disable-next-line no-constant-condition
-      if ("true" === "true") {
-        this.happyCount += 1;
-      } else {
-        // Emit Happy Reaction
-        const happyVote = {
-          reaction: "happy",
-          user: this.username,
-          chatroomKey: this.joinedRoom,
-        };
-        this.socketInstance.emit("happyVote", happyVote); // send happy vote to others
-      }
+      // Emit Happy Reaction
+      const happyVote = {
+        reaction: "happy",
+        user: this.username,
+        chatroomKey: this.joinedRoom,
+      };
+      this.socketInstance.emit("happyVote", happyVote); // send happy vote to others
     },
     async joinRoom(room) {
       this.socketInstance.emit("join-room", {
