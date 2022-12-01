@@ -229,6 +229,16 @@ export default {
       this.messages = this.messages.concat(data);
     });
 
+    // receive happyVote
+    this.socketInstance.on("happyVote:received", (data) => {
+      this.happyCount = data.happyCount;
+    });
+
+    // receive confusedVote
+    this.socketInstance.on("confusedVote:received", (data) => {
+      this.confusedCount = data.confusedCount;
+    });
+
     // reflect changed name
     this.socketInstance.on("username:received", (data) => {
       this.updateNameInMessages(data.userId, data.newUsername);
@@ -289,46 +299,18 @@ export default {
         return message;
       });
     },
-    async voteConfused() {
+    voteConfused() {
       // eslint-disable-next-line no-constant-condition
       if ("true" === "true") {
         this.confusedCount += 1;
       } else {
-        const isProd = process.env.NODE_ENV === "production";
-        const postRequesturl =
-          (isProd
-            ? "https://quickchat-api-61040.herokuapp.com/"
-            : "http://localhost:3000/") + `api/groupvibes`;
-        const getRequesturl =
-          (isProd
-            ? "https://quickchat-api-61040.herokuapp.com/"
-            : "http://localhost:3000/") +
-          `api/groupvibes?keyword=${this.joinedRoom}`;
-
-        // POST Request for Updating Confused Count
-        const options = {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-        };
-        options.body = JSON.stringify({
+        // Emit Confused Reaction
+        const confusedVote = {
           reaction: "confused",
           user: this.username,
           chatroomKey: this.joinedRoom,
-        });
-        await fetch(postRequesturl, options);
-
-        // GET Request for Confused Count
-
-        try {
-          const r = await fetch(getRequesturl);
-          const res = await r.json();
-          if (!r.ok) {
-            throw new Error(res.error);
-          }
-          this.confusedCount = res.confused;
-        } catch (e) {
-          console.log("Could not fetch counts for confused vibe:", e);
-        }
+        };
+        this.socketInstance.emit("confusedVote", confusedVote); // send confused vote to others
       }
     },
     async voteHappy() {
@@ -336,41 +318,13 @@ export default {
       if ("true" === "true") {
         this.happyCount += 1;
       } else {
-        const isProd = process.env.NODE_ENV === "production";
-        const postRequesturl =
-          (isProd
-            ? "https://quickchat-api-61040.herokuapp.com/"
-            : "http://localhost:3000/") + `api/groupvibes`;
-        const getRequesturl =
-          (isProd
-            ? "https://quickchat-api-61040.herokuapp.com/"
-            : "http://localhost:3000/") +
-          `api/groupvibes?keyword=${this.joinedRoom}`;
-
-        // POST Request for Updating Happy Count
-        const options = {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-        };
-        options.body = JSON.stringify({
+        // Emit Happy Reaction
+        const happyVote = {
           reaction: "happy",
           user: this.username,
           chatroomKey: this.joinedRoom,
-        });
-        await fetch(postRequesturl, options);
-
-        // GET Request for Happy Count
-
-        try {
-          const r = await fetch(getRequesturl);
-          const res = await r.json();
-          if (!r.ok) {
-            throw new Error(res.error);
-          }
-          this.happyCount = res.happy;
-        } catch (e) {
-          console.log("Could not fetch counts for happy vibe:", e);
-        }
+        };
+        this.socketInstance.emit("happyVote", happyVote); // send happy vote to others
       }
     },
     async joinRoom(room) {

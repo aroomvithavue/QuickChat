@@ -134,6 +134,26 @@ io.on("connection", (socket) => {
     socket.to(data.roomName).emit("message:received", data);
   });
 
+  socket.on("confusedVote", async (data) => {
+    const GroupVibeCollection = "Placeholder"
+    await GroupVibeCollection.updateOneByKeyword(
+      data.reaction,
+      data.user,
+      data.chatroomKey
+    );
+    socket.to(data.roomName).emit("confusedVote:received", data);
+  });
+
+  socket.on("happyVote", async (data) => {
+    const GroupVibeCollection = "Placeholder"
+    await GroupVibeCollection.updateOneByKeyword(
+      data.reaction,
+      data.user,
+      data.chatroomKey
+    );
+    socket.to(data.roomName).emit("happyVote:received", data);
+  });
+
   socket.on("username", (data) => {
     users[data.userId] = data.newUsername;
     socket.broadcast.emit("username:received", data);
