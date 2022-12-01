@@ -1,5 +1,5 @@
 <template>
-  <div id="app" class="mx-auto">
+  <div id="app" class="mx-auto max-h-screen">
     <header>
       <TopHeader />
     </header>

@@ -1,7 +1,7 @@
 <template>
-  <main class="flex">
+  <main class="flex max-h-[95vh] my-0 w-screen">
     <!-- Side Bar Code -->
-    <div class="flex flex-col w-1/5 h-screen border-r-4">
+    <div class="flex flex-col w-1/4 h-full min-h-[95vh] border-r-4">
       <div v-if="joinedRoom.length === 0">
         <h1 class="mt-10 text-2xl font-bold">No Room Joined Yet!</h1>
       </div>
@@ -57,7 +57,7 @@
           <button class="btn">{{ room }}</button>
         </div>
       </section>
-      <section v-else>
+      <section id="message-container" v-else class="overflow-y-auto">
         <div
           class="chat chat-start"
           v-for="message in messages"
