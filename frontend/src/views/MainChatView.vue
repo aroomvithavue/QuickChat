@@ -16,54 +16,81 @@
           <p>RoomView101</p>
         </div>
         <div class="mt-10">
-          <h1 class="font-bold">Vibe</h1>
-          <button
-            type="button"
-            id="confused"
-            @click="voteConfused"
-            class="p-2 text-gray-500 rounded-lg cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600"
-          >
-            <img
-              v-if="this.confusedCount === 0"
-              src="https://img.icons8.com/ios-glyphs/10/null/question--v1.png"
-            />
-            <img
-              v-if="this.confusedCount === 1"
-              src="https://img.icons8.com/ios-glyphs/20/null/question--v1.png"
-            />
-            <img
-              v-if="this.confusedCount === 2"
-              src="https://img.icons8.com/ios-glyphs/30/null/question--v1.png"
-            />
-            <img
-              v-if="this.confusedCount === 3"
-              src="https://img.icons8.com/ios-glyphs/40/null/question--v1.png"
-            />
-            <img
-              v-if="this.confusedCount === 4"
-              src="https://img.icons8.com/ios-glyphs/50/null/question--v1.png"
-            />
-            <img
-              v-if="this.confusedCount === 5"
-              src="https://img.icons8.com/ios-glyphs/60/null/question--v1.png"
-            />
-            <img
-              v-if="this.confusedCount === 6"
-              src="https://img.icons8.com/ios-glyphs/70/null/question--v1.png"
-            />
-            <p>{{ this.confusedCount }}</p>
-          </button>
-          <button
-            type="button"
-            id="happy"
-            @click="voteHappy"
-            class="p-2 text-gray-500 rounded-lg cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600"
-          >
-            <img
-              src="https://img.icons8.com/material-outlined/30/null/smiling.png"
-            />
-            {{ this.happyCount }}
-          </button>
+          <h1 class="font-bold">Group Vibe</h1>
+          <div class="flex flex-col justify-center content-center items-center">
+            <button
+              type="button"
+              id="confused"
+              @click="voteConfused"
+              class="mt-2 p-2 text-gray-500 rounded-lg cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600"
+            >
+              <img
+                v-if="this.confusedCount === 0"
+                src="https://img.icons8.com/ios-glyphs/30/null/question--v1.png"
+              />
+              <img
+                v-if="this.confusedCount === 1"
+                src="https://img.icons8.com/ios-glyphs/35/null/question--v1.png"
+              />
+              <img
+                v-if="this.confusedCount === 2"
+                src="https://img.icons8.com/ios-glyphs/40/null/question--v1.png"
+              />
+              <img
+                v-if="this.confusedCount === 3"
+                src="https://img.icons8.com/ios-glyphs/50/null/question--v1.png"
+              />
+              <img
+                v-if="this.confusedCount === 4"
+                src="https://img.icons8.com/ios-glyphs/60/null/question--v1.png"
+              />
+              <img
+                v-if="this.confusedCount === 5"
+                src="https://img.icons8.com/ios-glyphs/70/null/question--v1.png"
+              />
+              <img
+                v-if="this.confusedCount >= 6"
+                src="https://img.icons8.com/ios-glyphs/80/null/question--v1.png"
+              />
+              <p v-if="this.confusedCount !== 0">{{ this.confusedCount }}</p>
+            </button>
+            <button
+              type="button"
+              id="happy"
+              @click="voteHappy"
+              class="mt-2 p-2 text-gray-500 rounded-lg cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600"
+            >
+              <img
+                v-if="this.happyCount === 0"
+                src="https://img.icons8.com/material-outlined/30/null/smiling.png"
+              />
+              <img
+                v-if="this.happyCount === 1"
+                src="https://img.icons8.com/material-outlined/35/null/smiling.png"
+              />
+              <img
+                v-if="this.happyCount === 2"
+                src="https://img.icons8.com/material-outlined/40/null/smiling.png"
+              />
+              <img
+                v-if="this.happyCount === 3"
+                src="https://img.icons8.com/material-outlined/50/null/smiling.png"
+              />
+              <img
+                v-if="this.happyCount === 4"
+                src="https://img.icons8.com/material-outlined/60/null/smiling.png"
+              />
+              <img
+                v-if="this.happyCount === 5"
+                src="https://img.icons8.com/material-outlined/70/null/smiling.png"
+              />
+              <img
+                v-if="this.happyCount >= 6"
+                src="https://img.icons8.com/material-outlined/80/null/smiling.png"
+              />
+              <p v-if="this.happyCount !== 0">{{ this.happyCount }}</p>
+            </button>
+          </div>
         </div>
       </div>
       <footer v-if="joinedRoom.length !== 0" class="mt-auto py-10">
@@ -263,7 +290,6 @@ export default {
       });
     },
     async voteConfused() {
-      console.log("You clicked confused");
       // eslint-disable-next-line no-constant-condition
       if ("true" === "true") {
         this.confusedCount += 1;
@@ -306,7 +332,6 @@ export default {
       }
     },
     async voteHappy() {
-      console.log("You clicked happy");
       // eslint-disable-next-line no-constant-condition
       if ("true" === "true") {
         this.happyCount += 1;
@@ -360,7 +385,11 @@ export default {
         (isProd
           ? "https://quickchat-api-61040.herokuapp.com/"
           : "http://localhost:3000/") + `api/chatRooms?keyword=${room}`;
-      //   const url = `http://localhost:3000/api/chatRooms?keyword=${room}`;
+      const groupVibesCountURL =
+        (isProd
+          ? "https://quickchat-api-61040.herokuapp.com/"
+          : "http://localhost:3000/") +
+        `api/groupvibes?keyword=${this.joinedRoom}`;
 
       try {
         const r = await fetch(url);
@@ -373,6 +402,22 @@ export default {
         this.messages = res.messages;
       } catch (e) {
         console.log("Could not fetch messages:", e);
+      }
+
+      // Getting Initial Group Vibe Counts
+      try {
+        const r = await fetch(groupVibesCountURL);
+        const res = await r.json();
+        if (!r.ok) {
+          throw new Error(res.error);
+        }
+
+        this.happyCount = res.happy;
+        this.confusedCount = res.confused;
+      } catch (e) {
+        console.log("Could not fetch counts for group vibe:", e);
+        this.happyCount = 0;
+        this.confusedCount = 0;
       }
     },
     leaveRoom() {
