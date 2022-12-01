@@ -17,7 +17,26 @@
         </div>
         <div class="mt-10">
           <h1 class="font-bold">Vibe</h1>
-          <p>some emojis</p>
+          <button
+            type="button"
+            id="confused"
+            @click="voteConfused"
+            class="p-2 text-gray-500 rounded-lg cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600"
+          >
+            <img
+              src="https://img.icons8.com/ios-glyphs/30/000000/question--v1.png"
+            />
+          </button>
+          <button
+            type="button"
+            id="happy"
+            @click="voteHappy"
+            class="p-2 text-gray-500 rounded-lg cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600"
+          >
+            <img
+              src="https://img.icons8.com/material-outlined/30/null/smiling.png"
+            />
+          </button>
         </div>
       </div>
       <footer v-if="joinedRoom.length !== 0" class="mt-auto py-10">
@@ -82,22 +101,6 @@
         <div
           class="flex items-center w-full px-3 py-2 rounded-lg dark:bg-gray-700"
         >
-          <button
-            type="button"
-            class="p-2 text-gray-500 rounded-lg cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600"
-          >
-            <img
-              src="https://img.icons8.com/ios-glyphs/30/000000/question--v1.png"
-            />
-          </button>
-          <button
-            type="button"
-            class="p-2 text-gray-500 rounded-lg cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600"
-          >
-            <img
-              src="https://img.icons8.com/material-outlined/30/null/smiling.png"
-            />
-          </button>
           <textarea
             id="chat"
             rows="1"
@@ -153,6 +156,8 @@ export default {
       rooms: ["apple"], // list of strings (room names)
       joinedRoom: "",
       scrolling: false,
+      confusedCount: 0,
+      happyCount: 0,
     };
   },
   created() {
@@ -229,6 +234,82 @@ export default {
         }
         return message;
       });
+    },
+    async voteConfused() {
+      console.log("You clicked confused");
+      const isProd = process.env.NODE_ENV === "production";
+      const postRequesturl =
+        (isProd
+          ? "https://quickchat-api-61040.herokuapp.com/"
+          : "http://localhost:3000/") + `api/groupvibes`;
+      const getRequesturl =
+        (isProd
+          ? "https://quickchat-api-61040.herokuapp.com/"
+          : "http://localhost:3000/") +
+        `api/groupvibes?keyword=${this.joinedRoom}`;
+
+      // POST Request for Updating Confused Count
+      const options = {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+      };
+      options.body = JSON.stringify({
+        reaction: "confused",
+        user: this.username,
+        chatroomKey: this.joinedRoom,
+      });
+      await fetch(postRequesturl, options);
+
+      // GET Request for Confused Count
+
+      try {
+        const r = await fetch(getRequesturl);
+        const res = await r.json();
+        if (!r.ok) {
+          throw new Error(res.error);
+        }
+        this.confusedCount = res.confused;
+      } catch (e) {
+        console.log("Could not fetch counts for confused vibe:", e);
+      }
+    },
+    async voteHappy() {
+      console.log("You clicked happy");
+      const isProd = process.env.NODE_ENV === "production";
+      const postRequesturl =
+        (isProd
+          ? "https://quickchat-api-61040.herokuapp.com/"
+          : "http://localhost:3000/") + `api/groupvibes`;
+      const getRequesturl =
+        (isProd
+          ? "https://quickchat-api-61040.herokuapp.com/"
+          : "http://localhost:3000/") +
+        `api/groupvibes?keyword=${this.joinedRoom}`;
+
+      // POST Request for Updating Happy Count
+      const options = {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+      };
+      options.body = JSON.stringify({
+        reaction: "happy",
+        user: this.username,
+        chatroomKey: this.joinedRoom,
+      });
+      await fetch(postRequesturl, options);
+
+      // GET Request for Happy Count
+
+      try {
+        const r = await fetch(getRequesturl);
+        const res = await r.json();
+        if (!r.ok) {
+          throw new Error(res.error);
+        }
+        this.happyCount = res.happy;
+      } catch (e) {
+        console.log("Could not fetch counts for happy vibe:", e);
+      }
     },
     async joinRoom(room) {
       this.socketInstance.emit("join-room", {
