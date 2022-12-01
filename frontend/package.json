@@ -12,7 +12,7 @@
   "dependencies": {
     "autoprefixer": "^10",
     "core-js": "^3.8.3",
-    "daisyui": "^2.41.0",
+    "daisyui": "^2.42.1",
     "express": "^4.18.2",
     "postcss": "^8",
     "serve-static": "^1.15.0",

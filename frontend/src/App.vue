@@ -1,15 +1,18 @@
 <template>
-  <div id="app" class="mx-auto">
-    <ChatPage />
+  <div id="app" class="mx-auto max-h-screen">
+    <header>
+      <TopHeader />
+    </header>
+    <router-view />
   </div>
 </template>
 
 <script>
-import ChatPage from "@/components/Chat.vue";
+import TopHeader from "@/components/common/TopHeader.vue";
 
 export default {
   name: "App",
-  components: { ChatPage },
+  components: { TopHeader },
 };
 </script>
 

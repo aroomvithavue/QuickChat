@@ -1,24 +1,27 @@
 <template>
-  <div class="home">
-    <div class="card">
-      <figure>
-        <img alt="Vue logo" src="../assets/logo.png" />
-      </figure>
+  <main class="flex justify-evenly mt-10">
+    <div class="flex flex-row card w-96 bg-base-100 shadow-xl">
       <div class="card-body">
-        <HelloWorld msg="Welcome to Your Vue.js + TypeScript App" />
+        <h2 class="card-title">Create Chat</h2>
+        <p>Duration</p>
+        <div class="card-actions justify-end">
+          <a href="#/chat" class="link link-primary"
+            ><button class="btn btn-primary">Generate Chat</button></a
+          >
+        </div>
       </div>
     </div>
-  </div>
+
+    <div class="flex flex-row card w-96 bg-base-100 shadow-xl">
+      <div class="card-body">
+        <h2 class="card-title">Join Chat</h2>
+        <p>Keyword</p>
+        <div class="card-actions justify-end">
+          <a href="#/chat" class="link link-primary"
+            ><button class="btn btn-primary">Join Chat</button></a
+          >
+        </div>
+      </div>
+    </div>
+  </main>
 </template>
-
-<script lang="ts">
-import Vue from "vue";
-import HelloWorld from "@/components/HelloWorld.vue"; // @ is an alias to /src
-
-export default Vue.extend({
-  name: "HomeView",
-  components: {
-    HelloWorld,
-  },
-});
-</script>
