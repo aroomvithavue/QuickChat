@@ -21,7 +21,13 @@
         </div>
       </div>
       <footer v-if="joinedRoom.length !== 0" class="mt-auto py-10">
-        <button class="btn mt-2 max-w-xs mt-10">Export Chat</button>
+        <router-link
+          :to="{ name: 'export_view', params: { keyword: joinedRoom } }"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <button class="btn mt-2 max-w-xs mt-10">Export Chat</button>
+        </router-link>
         <button
           v-if="joinedRoom.length !== 0"
           class="btn mt-2 max-w-xs ml-2"
