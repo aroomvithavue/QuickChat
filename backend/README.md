@@ -36,7 +36,6 @@ This renders the `index.html` file that will be used to interact with the backen
 
 **Body**
 
-- `keyword` _{string}_ - keyword of chat room
 - `days` _{string}_ - days until chat room expiration
 - `hours` _{string}_ - hours until chat room expiration
 
@@ -47,7 +46,6 @@ This renders the `index.html` file that will be used to interact with the backen
 
 **Throws**
 
-- `400` if the keyword is empty or corresponds to a chatroom that already exists
 - `400` if days is not a non-negative integer
 - `400` if hours is not a non-negative integer
 
