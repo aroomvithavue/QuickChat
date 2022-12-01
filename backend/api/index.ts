@@ -135,23 +135,27 @@ io.on("connection", (socket) => {
   });
 
   socket.on("confusedVote", async (data) => {
-    const GroupVibeCollection = "Placeholder"
-    await GroupVibeCollection.updateOneByKeyword(
+    const GroupVibeCollectionNOTREAL = "Is a Placeholder Collection"
+    const updateOneNOTREAL = "Is A Placeholder Function Within Collection"
+    // updateOneNOTREAL should take in a reaction, username, and chatroomKey and update the counts for the emojis and handle one user voting and handling toggling. In the end, it should return a json object like {happy: #count, confused: #count}
+    const totalCounts = await GroupVibeCollectionNOTREAL.updateOneNOTREAL(
       data.reaction,
       data.user,
       data.chatroomKey
     );
-    socket.to(data.roomName).emit("confusedVote:received", data);
+    socket.to(data.roomName).emit("confusedVote:received", totalCounts);
   });
 
   socket.on("happyVote", async (data) => {
-    const GroupVibeCollection = "Placeholder"
-    await GroupVibeCollection.updateOneByKeyword(
+    const GroupVibeCollectionNOTREAL = "Is a Placeholder Collection"
+    const updateOneNOTREAL = "Is A Placeholder Function Within Collection"
+    // updateOneNOTREAL should take in a reaction, username, and chatroomKey and update the counts for the emojis and handle one user voting and handling toggling. In the end, it should return a json object like {happy: #count, confused: #count}
+    const totalCounts = await GroupVibeCollectionNOTREAL.updateOneNOTREAL(
       data.reaction,
       data.user,
       data.chatroomKey
     );
-    socket.to(data.roomName).emit("happyVote:received", data);
+    socket.to(data.roomName).emit("happyVote:received", totalCounts);
   });
 
   socket.on("username", (data) => {

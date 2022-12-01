@@ -231,12 +231,12 @@ export default {
 
     // receive happyVote
     this.socketInstance.on("happyVote:received", (data) => {
-      this.happyCount = data.happyCount;
+      this.happyCount = data.happy;
     });
 
     // receive confusedVote
     this.socketInstance.on("confusedVote:received", (data) => {
-      this.confusedCount = data.confusedCount;
+      this.confusedCount = data.confused;
     });
 
     // reflect changed name
