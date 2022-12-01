@@ -184,6 +184,13 @@ export default {
     this.socketInstance.on("leave", (data) => {
       this.messages = this.messages.concat(data);
     });
+    this.joinRoom(this.$route.params.keyword);
+    this.$watch(
+      () => this.$route.params,
+      (toParams, previousParams) => {
+        this.joinRoom(toParams.keyword);
+      }
+    );
   },
   updated() {
     //autoscroll to bottom of chat, if user is not scrolling up
@@ -255,6 +262,7 @@ export default {
         this.messages = res.messages;
       } catch (e) {
         console.log("Could not fetch messages:", e);
+        this.$router.push({ name: "home" });
       }
     },
     leaveRoom() {
