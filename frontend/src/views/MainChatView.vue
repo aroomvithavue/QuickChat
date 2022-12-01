@@ -24,8 +24,34 @@
             class="p-2 text-gray-500 rounded-lg cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600"
           >
             <img
-              src="https://img.icons8.com/ios-glyphs/30/000000/question--v1.png"
+              v-if="this.confusedCount === 0"
+              src="https://img.icons8.com/ios-glyphs/10/null/question--v1.png"
             />
+            <img
+              v-if="this.confusedCount === 1"
+              src="https://img.icons8.com/ios-glyphs/20/null/question--v1.png"
+            />
+            <img
+              v-if="this.confusedCount === 2"
+              src="https://img.icons8.com/ios-glyphs/30/null/question--v1.png"
+            />
+            <img
+              v-if="this.confusedCount === 3"
+              src="https://img.icons8.com/ios-glyphs/40/null/question--v1.png"
+            />
+            <img
+              v-if="this.confusedCount === 4"
+              src="https://img.icons8.com/ios-glyphs/50/null/question--v1.png"
+            />
+            <img
+              v-if="this.confusedCount === 5"
+              src="https://img.icons8.com/ios-glyphs/60/null/question--v1.png"
+            />
+            <img
+              v-if="this.confusedCount === 6"
+              src="https://img.icons8.com/ios-glyphs/70/null/question--v1.png"
+            />
+            <p>{{ this.confusedCount }}</p>
           </button>
           <button
             type="button"
@@ -36,6 +62,7 @@
             <img
               src="https://img.icons8.com/material-outlined/30/null/smiling.png"
             />
+            {{ this.happyCount }}
           </button>
         </div>
       </div>
@@ -237,78 +264,88 @@ export default {
     },
     async voteConfused() {
       console.log("You clicked confused");
-      const isProd = process.env.NODE_ENV === "production";
-      const postRequesturl =
-        (isProd
-          ? "https://quickchat-api-61040.herokuapp.com/"
-          : "http://localhost:3000/") + `api/groupvibes`;
-      const getRequesturl =
-        (isProd
-          ? "https://quickchat-api-61040.herokuapp.com/"
-          : "http://localhost:3000/") +
-        `api/groupvibes?keyword=${this.joinedRoom}`;
+      // eslint-disable-next-line no-constant-condition
+      if ("true" === "true") {
+        this.confusedCount += 1;
+      } else {
+        const isProd = process.env.NODE_ENV === "production";
+        const postRequesturl =
+          (isProd
+            ? "https://quickchat-api-61040.herokuapp.com/"
+            : "http://localhost:3000/") + `api/groupvibes`;
+        const getRequesturl =
+          (isProd
+            ? "https://quickchat-api-61040.herokuapp.com/"
+            : "http://localhost:3000/") +
+          `api/groupvibes?keyword=${this.joinedRoom}`;
 
-      // POST Request for Updating Confused Count
-      const options = {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-      };
-      options.body = JSON.stringify({
-        reaction: "confused",
-        user: this.username,
-        chatroomKey: this.joinedRoom,
-      });
-      await fetch(postRequesturl, options);
+        // POST Request for Updating Confused Count
+        const options = {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+        };
+        options.body = JSON.stringify({
+          reaction: "confused",
+          user: this.username,
+          chatroomKey: this.joinedRoom,
+        });
+        await fetch(postRequesturl, options);
 
-      // GET Request for Confused Count
+        // GET Request for Confused Count
 
-      try {
-        const r = await fetch(getRequesturl);
-        const res = await r.json();
-        if (!r.ok) {
-          throw new Error(res.error);
+        try {
+          const r = await fetch(getRequesturl);
+          const res = await r.json();
+          if (!r.ok) {
+            throw new Error(res.error);
+          }
+          this.confusedCount = res.confused;
+        } catch (e) {
+          console.log("Could not fetch counts for confused vibe:", e);
         }
-        this.confusedCount = res.confused;
-      } catch (e) {
-        console.log("Could not fetch counts for confused vibe:", e);
       }
     },
     async voteHappy() {
       console.log("You clicked happy");
-      const isProd = process.env.NODE_ENV === "production";
-      const postRequesturl =
-        (isProd
-          ? "https://quickchat-api-61040.herokuapp.com/"
-          : "http://localhost:3000/") + `api/groupvibes`;
-      const getRequesturl =
-        (isProd
-          ? "https://quickchat-api-61040.herokuapp.com/"
-          : "http://localhost:3000/") +
-        `api/groupvibes?keyword=${this.joinedRoom}`;
+      // eslint-disable-next-line no-constant-condition
+      if ("true" === "true") {
+        this.happyCount += 1;
+      } else {
+        const isProd = process.env.NODE_ENV === "production";
+        const postRequesturl =
+          (isProd
+            ? "https://quickchat-api-61040.herokuapp.com/"
+            : "http://localhost:3000/") + `api/groupvibes`;
+        const getRequesturl =
+          (isProd
+            ? "https://quickchat-api-61040.herokuapp.com/"
+            : "http://localhost:3000/") +
+          `api/groupvibes?keyword=${this.joinedRoom}`;
 
-      // POST Request for Updating Happy Count
-      const options = {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-      };
-      options.body = JSON.stringify({
-        reaction: "happy",
-        user: this.username,
-        chatroomKey: this.joinedRoom,
-      });
-      await fetch(postRequesturl, options);
+        // POST Request for Updating Happy Count
+        const options = {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+        };
+        options.body = JSON.stringify({
+          reaction: "happy",
+          user: this.username,
+          chatroomKey: this.joinedRoom,
+        });
+        await fetch(postRequesturl, options);
 
-      // GET Request for Happy Count
+        // GET Request for Happy Count
 
-      try {
-        const r = await fetch(getRequesturl);
-        const res = await r.json();
-        if (!r.ok) {
-          throw new Error(res.error);
+        try {
+          const r = await fetch(getRequesturl);
+          const res = await r.json();
+          if (!r.ok) {
+            throw new Error(res.error);
+          }
+          this.happyCount = res.happy;
+        } catch (e) {
+          console.log("Could not fetch counts for happy vibe:", e);
         }
-        this.happyCount = res.happy;
-      } catch (e) {
-        console.log("Could not fetch counts for happy vibe:", e);
       }
     },
     async joinRoom(room) {
