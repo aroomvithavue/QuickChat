@@ -7,15 +7,13 @@ class GroupVibeCollection {
   /**
    * Add a group vibe.
    *
-   * @param {string} chatroomKey - chat room key
+   * @param {string} chatroom - id of chat room
    * @return {Promise<HydratedDocument<GroupVibe>>} - new group vibe
    */
-  static async addOne(chatroomKey: string): Promise<HydratedDocument<GroupVibe>> {
-
-    const chatRoomId = (await ChatRoomCollection.findByKeyword(chatroomKey))._id;
+  static async addOne(chatroom: Types.ObjectId | string): Promise<HydratedDocument<GroupVibe>> {
     
     const groupVibe = new GroupVibeModel({
-        chatRoomId, 
+        chatroom, 
         happy: [], 
         confused: []
     });
