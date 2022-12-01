@@ -57,7 +57,12 @@
           <button class="btn">{{ room }}</button>
         </div>
       </section>
-      <section id="message-container" v-else class="overflow-y-auto">
+      <section
+        id="messageContainer"
+        @scroll="handleScroll"
+        v-else
+        class="overflow-y-auto"
+      >
         <div
           class="chat chat-start"
           v-for="message in messages"
@@ -146,6 +151,7 @@ export default {
       messages: [],
       rooms: ["apple"], // list of strings (room names)
       joinedRoom: "",
+      scrolling: false,
     };
   },
   created() {
@@ -177,6 +183,11 @@ export default {
     this.socketInstance.on("leave", (data) => {
       this.messages = this.messages.concat(data);
     });
+  },
+  updated() {
+    //autoscroll to bottom of chat, if user is not scrolling up
+    const container = this.$el.querySelector("#messageContainer");
+    if (!this.scrolling) container.scrollTop = container.scrollHeight;
   },
   methods: {
     // send message
@@ -244,6 +255,15 @@ export default {
         roomName: this.joinedRoom,
       });
       this.joinedRoom = "";
+    },
+    handleScroll(e) {
+      //Check if user is scrolling, if so we don't want to autoscroll to bottom on new messages received.
+      //If they scroll to bottom, auto scroll on new events again.
+      if (e.target.offsetHeight + e.target.scrollTop >= e.target.scrollHeight) {
+        this.scrolling = false;
+      } else {
+        this.scrolling = true;
+      }
     },
   },
 };
