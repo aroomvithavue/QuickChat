@@ -59,13 +59,14 @@
       </header>
       <!-- Chat Header Code -->
 
-      <!-- Chat Code -->
+      <!-- FilesTab Code -->
       <section
         id="filesContainer"
         @scroll="handleScroll"
         v-if="inFilesTabView"
         class="overflow-y-auto"
       ></section>
+      <!-- Chat Code -->
       <section
         id="messageContainer"
         @scroll="handleScroll"
@@ -84,7 +85,6 @@
         </div>
       </section>
       <footer
-        v-if="!inFilesTabView"
         class="mt-auto py-4 border-t-4 flex flex-wrap -mb-px items-center justify-center"
       >
         <label for="chat" class="sr-only">Your Message</label>
@@ -134,6 +134,7 @@
             <span class="sr-only">Send message</span>
           </button>
           <button
+            @click="uploadFile"
             type="button"
             class="p-2 text-gray-500 rounded-lg cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600"
           >
@@ -221,6 +222,11 @@ export default {
       this.messages = this.messages.concat(message); // show message in my client
       this.socketInstance.emit("message", message); // send message to others
       this.text = ""; // intialize input
+      this.inFilesTabView = false;
+    },
+    uploadFile() {
+      // functionality for uploading files could be added here
+      this.inFilesTabView = true;
     },
     changeName() {
       this.socketInstance.emit("username", {
