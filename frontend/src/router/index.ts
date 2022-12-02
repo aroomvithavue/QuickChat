@@ -1,6 +1,7 @@
 import Vue from "vue";
 import VueRouter, { RouteConfig } from "vue-router";
 import HomeView from "../views/HomeView.vue";
+import ExportView from "../views/ExportView.vue";
 
 Vue.use(VueRouter);
 
@@ -11,13 +12,18 @@ const routes: Array<RouteConfig> = [
     component: HomeView,
   },
   {
-    path: "/chat",
+    path: "/:keyword",
     name: "chat",
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () =>
       import(/* webpackChunkName: "chat" */ "../views/MainChatView.vue"),
+  },
+  {
+    path: "/:keyword/export",
+    name: "export_view",
+    component: ExportView,
   },
 ];
 

@@ -21,7 +21,13 @@
         </div>
       </div>
       <footer v-if="joinedRoom.length !== 0" class="mt-auto py-10">
-        <button class="btn mt-2 max-w-xs mt-10">Export Chat</button>
+        <router-link
+          :to="{ name: 'export_view', params: { keyword: joinedRoom } }"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <button class="btn mt-2 max-w-xs mt-10">Export Chat</button>
+        </router-link>
         <button
           v-if="joinedRoom.length !== 0"
           class="btn mt-2 max-w-xs ml-2"
@@ -184,6 +190,13 @@ export default {
     this.socketInstance.on("leave", (data) => {
       this.messages = this.messages.concat(data);
     });
+    this.joinRoom(this.$route.params.keyword);
+    this.$watch(
+      () => this.$route.params,
+      (toParams, previousParams) => {
+        this.joinRoom(toParams.keyword);
+      }
+    );
   },
   updated() {
     //autoscroll to bottom of chat, if user is not scrolling up
@@ -255,6 +268,7 @@ export default {
         this.messages = res.messages;
       } catch (e) {
         console.log("Could not fetch messages:", e);
+        this.$router.push({ name: "home" });
       }
     },
     leaveRoom() {
