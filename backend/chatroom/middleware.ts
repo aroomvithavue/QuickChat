@@ -83,23 +83,43 @@ const isValidChatRoom = async (
 /**
  * Checks if the new message is valid.
  */
-const isValidMessage = async (
+const isValidEdit = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  const message = req.body.message as string;
-  if (!message.trim()) {
-    res.status(400).json({
-      error: "Message must be at least one character long.",
-    });
-    return;
-  }
 
-  const author = req.body.author as string;
-  if (!author.trim()) {
+  const editType = req.body.edit as string;
+  
+  if (editType === "message"){
+    const message = req.body.message as string;
+    if (!message.trim()) {
+      res.status(400).json({
+        error: "Message must be at least one character long.",
+      });
+      return;
+    }
+
+    const author = req.body.author as string;
+    if (!author.trim()) {
+      res.status(400).json({
+        error: "Author must be at least one character long.",
+      });
+      return;
+    }
+  }
+  else if (editType === "file"){
+    const fileId = req.body.fileId as string;
+    if (!fileId.trim()) {
+      res.status(400).json({
+        error: "File ID must be at least one character long.",
+      });
+      return;
+    }
+  }
+  else{
     res.status(400).json({
-      error: "Author must be at least one character long.",
+      error: "A chat room edit must be either adding a message or adding a file.",
     });
     return;
   }
@@ -111,5 +131,5 @@ export {
   doesChatRoomWithKeyExist,
   doesChatRoomExist,
   isValidChatRoom,
-  isValidMessage,
+  isValidEdit,
 };
