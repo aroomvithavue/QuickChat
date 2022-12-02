@@ -32,7 +32,10 @@ const formsAndHandlers = {
   "view-chat-by-keyword": viewChatRoomByKeyword,
   "create-chat": createChatRoom,
   "add-message": addMessageToChatRoom,
-  "delete-chat": deleteChatRoom
+  "delete-chat": deleteChatRoom,
+  "view-group-vibe": viewGroupVibeByKeyword,
+  "add-reaction": addReactionToGroupVibe,
+  "delete-group-vibe": deleteGroupVibe
 };
 
 // Attach handlers to forms

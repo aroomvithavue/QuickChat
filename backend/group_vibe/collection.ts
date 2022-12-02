@@ -13,7 +13,7 @@ class GroupVibeCollection {
   static async addOne(chatroom: Types.ObjectId | string): Promise<HydratedDocument<GroupVibe>> {
     
     const groupVibe = new GroupVibeModel({
-        chatroom, 
+        chatroomId: chatroom, 
         happy: [], 
         confused: []
     });
