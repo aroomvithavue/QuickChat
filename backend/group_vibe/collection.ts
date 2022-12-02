@@ -33,6 +33,19 @@ class GroupVibeCollection {
   }
 
   /**
+   * Find group vibe counts by id.
+   *
+   * @param groupVibeId id of group vibe to find
+   * @returns {{happy: number, confused: number}} - the group vibe counts with the given id
+   */
+   static async findOneCounts(groupVibeId: Types.ObjectId | string): Promise<{happy: number, confused: number}> {
+    const groupVibe = await GroupVibeModel.findOne({ _id: groupVibeId });
+    const happyCount = groupVibe.happy.length;
+    const confusedCount = groupVibe.confused.length;
+    return {happy: happyCount, confused: confusedCount};
+  }
+
+  /**
    * Find a group vibe by its corresponding chat room id.
    *
    * @param chatroom id of chat room
@@ -127,6 +140,39 @@ class GroupVibeCollection {
     
     await groupVibe.save();
     return groupVibe;
+  }
+
+  /**
+   * Update a group vibe.
+   *
+   * @param chatroomKey - keyword that corresponds to chat room
+   * @param reaction - reaction
+   * @param user - user
+   * @returns {Promise<{happy: number, confused: number}} - the newly updated group vibe counts
+   */
+   static async updateOne(chatroomKey: string, reaction: "happy" | "confused", user: string): Promise<{happy: number, confused: number}> {
+
+    const chatroom = await ChatRoomCollection.findByKeyword(chatroomKey);
+    let groupVibe = await GroupVibeModel.findOne({ chatroomId: chatroom._id });
+
+    if (groupVibe === null){
+        groupVibe = await GroupVibeCollection.addOne(chatroom._id);
+    }
+
+    const reactionExists = await GroupVibeCollection.findReactionByUser(groupVibe._id, user, reaction);
+
+    if (reactionExists){
+        groupVibe = await GroupVibeCollection.updateOneDelete(groupVibe._id, reaction, user);
+    }
+    else{
+        groupVibe = await GroupVibeCollection.updateOneAdd(groupVibe._id, reaction, user);
+    }
+    
+    await groupVibe.save();
+
+    const happyCount = groupVibe.happy.length;
+    const confusedCount = groupVibe.confused.length;
+    return {happy: happyCount, confused: confusedCount};
   }
 
   /**
