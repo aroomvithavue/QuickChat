@@ -36,7 +36,7 @@ class GroupVibeCollection {
    * Find group vibe counts by id.
    *
    * @param groupVibeId id of group vibe to find
-   * @returns {{happy: number, confused: number}} - the group vibe counts with the given id
+   * @returns {Promise<{happy: number, confused: number}>} - the group vibe counts with the given id
    */
    static async findOneCounts(groupVibeId: Types.ObjectId | string): Promise<{happy: number, confused: number}> {
     const groupVibe = await GroupVibeModel.findOne({ _id: groupVibeId });
@@ -155,7 +155,7 @@ class GroupVibeCollection {
     const chatroom = await ChatRoomCollection.findByKeyword(chatroomKey);
     let groupVibe = await GroupVibeModel.findOne({ chatroomId: chatroom._id });
 
-    if (groupVibe === null){
+    if (!groupVibe || groupVibe === null){
         groupVibe = await GroupVibeCollection.addOne(chatroom._id);
     }
 
