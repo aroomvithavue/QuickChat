@@ -9,6 +9,7 @@ import http from "http";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import { chatRoomRouter } from "../chatroom/router";
+import { groupVibeRouter } from "../group_vibe/router";
 import { Server } from "socket.io";
 import ChatRoomCollection from "../chatroom/collection";
 
@@ -83,6 +84,7 @@ app.get("/", (req: Request, res: Response) => {
 
 // Add routers from routes folder
 app.use("/api/chatRooms", chatRoomRouter);
+app.use("/api/groupVibes", groupVibeRouter);
 
 // Catch all the other routes and display error message
 app.all("*", (req: Request, res: Response) => {
