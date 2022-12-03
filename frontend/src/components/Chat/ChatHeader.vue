@@ -5,18 +5,20 @@
     >
       <ul class="flex flex-wrap -mb-px items-center justify-center">
         <li class="mr-2">
-          <a
-            href="#"
+          <button
+            @click="switchToChat"
             class="inline-block p-4 rounded-t-lg border-b-2 border-gray-200 hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
-            >Chat</a
           >
+            Chat
+          </button>
         </li>
         <li class="mr-2">
-          <a
-            href="#"
+          <button
+            @click="switchToFiles"
             class="inline-block p-4 rounded-t-lg border-b-2 border-gray-200 hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
-            >Files</a
           >
+            Files
+          </button>
         </li>
       </ul>
     </div>
@@ -27,5 +29,13 @@
 export default {
   name: "ChatHeader",
   components: {},
+  methods: {
+    switchToChat() {
+      this.$emit("switchToChat");
+    },
+    switchToFiles() {
+      this.$emit("switchToFiles");
+    },
+  },
 };
 </script>
