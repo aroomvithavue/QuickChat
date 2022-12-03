@@ -33,6 +33,7 @@ class ChatRoomCollection {
       dateCreated: date,
       dateExpired: date2,
       messages: [],
+      files: []
     });
 
     await chatroom.save();
@@ -106,7 +107,7 @@ class ChatRoomCollection {
    * @returns {Promise<HydratedDocument<ChatRoom>>} - the newly updated chat room
    */
   static async updateOneByKeyword(
-    chatKeyword: string | string,
+    chatKeyword: string,
     messageText: string,
     messageAuthor: string
   ): Promise<HydratedDocument<ChatRoom>> {
@@ -117,6 +118,47 @@ class ChatRoomCollection {
       date: messageDate,
       author: messageAuthor,
     });
+    await chatroom.save();
+    return chatroom;
+  }
+
+  /**
+   * Update a chat by adding a new file.
+   *
+   * @param chatRoomId id of chat room
+   * @param file id of file
+   * @returns {Promise<HydratedDocument<ChatRoom>>} - the newly updated chat room
+   */
+   static async addFile(
+    chatRoomId: Types.ObjectId | string,
+    file: string
+  ): Promise<HydratedDocument<ChatRoom>> {
+    
+    const chatroom = await ChatRoomModel.findOne({ _id: chatRoomId });
+    const fileDate = new Date();
+    chatroom.files.push({fileId: file, date: fileDate});
+    
+    await chatroom.save();
+    return chatroom;
+  }
+
+  /**
+   * Update a chat by adding a new file. Differs from prior function in that it identifies
+   * the chat by keyword, rather than by id.
+   *
+   * @param chatKeyword keyword of chat room
+   * @param file id of file
+   * @returns {Promise<HydratedDocument<ChatRoom>>} - the newly updated chat room
+   */
+   static async addFileByKeyword(
+    chatKeyword: string,
+    file: string
+  ): Promise<HydratedDocument<ChatRoom>> {
+    
+    const chatroom = await ChatRoomModel.findOne({ keyword: chatKeyword });
+    const fileDate = new Date();
+    chatroom.files.push({fileId: file, date: fileDate});
+    
     await chatroom.save();
     return chatroom;
   }

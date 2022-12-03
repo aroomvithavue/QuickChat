@@ -94,7 +94,13 @@
         </div>
       </div>
       <footer v-if="joinedRoom.length !== 0" class="mt-auto py-10">
-        <button class="btn mt-2 max-w-xs mt-10">Export Chat</button>
+        <router-link
+          :to="{ name: 'export_view', params: { keyword: joinedRoom } }"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <button class="btn mt-2 max-w-xs mt-10">Export Chat</button>
+        </router-link>
         <button
           v-if="joinedRoom.length !== 0"
           class="btn mt-2 max-w-xs ml-2"
@@ -212,6 +218,8 @@ export default {
       scrolling: false,
       confusedCount: 0,
       happyCount: 0,
+      userVotedConfused: false,
+      userVotedHappy: false,
     };
   },
   created() {
@@ -231,11 +239,15 @@ export default {
 
     // receive happyVote
     this.socketInstance.on("happyVote:received", (data) => {
+      console.log("receiving happyVote");
+      console.log(data);
       this.happyCount = data.happy;
     });
 
     // receive confusedVote
     this.socketInstance.on("confusedVote:received", (data) => {
+      console.log("receiving confusedVote");
+      console.log(data);
       this.confusedCount = data.confused;
     });
 
@@ -253,6 +265,13 @@ export default {
     this.socketInstance.on("leave", (data) => {
       this.messages = this.messages.concat(data);
     });
+    this.joinRoom(this.$route.params.keyword);
+    this.$watch(
+      () => this.$route.params,
+      (toParams, previousParams) => {
+        this.joinRoom(toParams.keyword);
+      }
+    );
   },
   updated() {
     //autoscroll to bottom of chat, if user is not scrolling up
@@ -307,6 +326,14 @@ export default {
         chatroomKey: this.joinedRoom,
       };
       this.socketInstance.emit("confusedVote", confusedVote); // send confused vote to others
+      console.log("old confused counts");
+      console.log(this.confusedCount);
+      if (this.userVotedConfused) {
+        this.confusedCount -= 1;
+      } else {
+        this.confusedCount += 1;
+      }
+      this.userVotedConfused = !this.userVotedConfused;
     },
     async voteHappy() {
       // Emit Happy Reaction
@@ -316,6 +343,14 @@ export default {
         chatroomKey: this.joinedRoom,
       };
       this.socketInstance.emit("happyVote", happyVote); // send happy vote to others
+      console.log("old happy counts");
+      console.log(this.happyCount);
+      if (this.userVotedHappy) {
+        this.happyCount -= 1;
+      } else {
+        this.happyCount += 1;
+      }
+      this.userVotedHappy = !this.userVotedHappy;
     },
     async joinRoom(room) {
       this.socketInstance.emit("join-room", {
@@ -333,7 +368,7 @@ export default {
         (isProd
           ? "https://quickchat-api-61040.herokuapp.com/"
           : "http://localhost:3000/") +
-        `api/groupvibes?keyword=${this.joinedRoom}`;
+        `api/groupVibes?keyword=${this.joinedRoom}`;
 
       try {
         const r = await fetch(url);
@@ -346,6 +381,7 @@ export default {
         this.messages = res.messages;
       } catch (e) {
         console.log("Could not fetch messages:", e);
+        this.$router.push({ name: "home" });
       }
 
       // Getting Initial Group Vibe Counts

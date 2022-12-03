@@ -104,18 +104,24 @@ router.delete(
  */
 router.patch(
   "/:chatRoomId?",
-  [chatRoomValidator.doesChatRoomExist, chatRoomValidator.isValidMessage],
+  [chatRoomValidator.doesChatRoomExist, chatRoomValidator.isValidEdit],
   async (req: Request, res: Response) => {
-    const message = req.body.message as string;
-    const author = req.body.author as string;
-    const chatRoom = await ChatRoomCollection.updateOne(
-      req.params.chatRoomId,
-      message,
-      author
-    );
+    
+    const editType = req.body.edit as string;
 
-    const response = util.constructChatRoomResponse(chatRoom);
-    res.status(200).json(response);
+    if (editType === "message"){
+      const message = req.body.message as string;
+      const author = req.body.author as string;
+      const chatRoom = await ChatRoomCollection.updateOne(req.params.chatRoomId, message, author);
+      const response = util.constructChatRoomResponse(chatRoom);
+      res.status(200).json(response);
+    }
+    else if (editType === "file"){
+      const fileId = req.body.fileId as string;
+      const chatRoom = await ChatRoomCollection.addFile(req.params.chatRoomId, fileId);
+      const response = util.constructChatRoomResponse(chatRoom);
+      res.status(200).json(response);
+    }
   }
 );
 

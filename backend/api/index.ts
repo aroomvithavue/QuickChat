@@ -9,8 +9,10 @@ import http from "http";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import { chatRoomRouter } from "../chatroom/router";
+import { groupVibeRouter } from "../group_vibe/router";
 import { Server } from "socket.io";
 import ChatRoomCollection from "../chatroom/collection";
+import GroupVibeCollection from "../group_vibe/collection";
 
 const cors = require("cors");
 
@@ -83,6 +85,7 @@ app.get("/", (req: Request, res: Response) => {
 
 // Add routers from routes folder
 app.use("/api/chatRooms", chatRoomRouter);
+app.use("/api/groupVibes", groupVibeRouter);
 
 // Catch all the other routes and display error message
 app.all("*", (req: Request, res: Response) => {
@@ -135,27 +138,25 @@ io.on("connection", (socket) => {
   });
 
   socket.on("confusedVote", async (data) => {
-    const GroupVibeCollectionNOTREAL = "Is a Placeholder Collection"
-    const updateOneNOTREAL = "Is A Placeholder Function Within Collection"
-    // updateOneNOTREAL should take in a reaction, username, and chatroomKey and update the counts for the emojis and handle one user voting and handling toggling. In the end, it should return a json object like {happy: #count, confused: #count}
-    const totalCounts = await GroupVibeCollectionNOTREAL.updateOneNOTREAL(
+    const totalCounts = await GroupVibeCollection.updateOne(
+      data.chatroomKey,
       data.reaction,
       data.user,
-      data.chatroomKey
     );
-    socket.to(data.roomName).emit("confusedVote:received", totalCounts);
+    console.log("totalCounts")
+    console.log(totalCounts)
+    socket.to(data.chatroomKey).emit("confusedVote:received", totalCounts);
   });
 
   socket.on("happyVote", async (data) => {
-    const GroupVibeCollectionNOTREAL = "Is a Placeholder Collection"
-    const updateOneNOTREAL = "Is A Placeholder Function Within Collection"
-    // updateOneNOTREAL should take in a reaction, username, and chatroomKey and update the counts for the emojis and handle one user voting and handling toggling. In the end, it should return a json object like {happy: #count, confused: #count}
-    const totalCounts = await GroupVibeCollectionNOTREAL.updateOneNOTREAL(
+    const totalCounts = await GroupVibeCollection.updateOne(
+      data.chatroomKey,
       data.reaction,
       data.user,
-      data.chatroomKey
     );
-    socket.to(data.roomName).emit("happyVote:received", totalCounts);
+    console.log("totalCounts")
+    console.log(totalCounts)
+    socket.to(data.chatroomKey).emit("happyVote:received", totalCounts);
   });
 
   socket.on("username", (data) => {
