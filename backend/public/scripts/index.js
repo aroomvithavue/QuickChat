@@ -35,7 +35,8 @@ const formsAndHandlers = {
   "delete-chat": deleteChatRoom,
   "view-group-vibe": viewGroupVibeByKeyword,
   "add-reaction": addReactionToGroupVibe,
-  "delete-group-vibe": deleteGroupVibe
+  "delete-group-vibe": deleteGroupVibe,
+  "post-file": addFile,
 };
 
 // Attach handlers to forms
