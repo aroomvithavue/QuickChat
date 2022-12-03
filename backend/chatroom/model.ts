@@ -7,7 +7,7 @@ export type ChatRoom = {
   dateCreated: Date;
   dateExpired: Date;
   messages: Array<{ text: string; date: Date; author: string }>;
-  files: Array<{ fileId: string; date: Date }>;
+  files: Array<{ fileId: string; filename: string; date: Date }>;
 };
 
 const ChatRoomSchema = new Schema<ChatRoom>({
@@ -31,7 +31,7 @@ const ChatRoomSchema = new Schema<ChatRoom>({
   ],
   files: [
     {
-      type: { fileId: String, date: Date },
+      type: { fileId: String, filename: String, date: Date },
       required: false,
     },
   ],

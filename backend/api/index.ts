@@ -117,7 +117,8 @@ app.post(
     const file: any = req.file;
     const id = req.params.chatRoomId;
     const fileId = file.id;
-    ChatRoomCollection.addFile(id, fileId);
+    const filename = file.filename;
+    ChatRoomCollection.addFile(id, fileId, filename);
     const response = { message: "success" };
     res.status(201).json(response);
   }

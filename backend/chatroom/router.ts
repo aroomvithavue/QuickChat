@@ -118,14 +118,6 @@ router.patch(
       );
       const response = util.constructChatRoomResponse(chatRoom);
       res.status(200).json(response);
-    } else if (editType === "file") {
-      const fileId = req.body.fileId as string;
-      const chatRoom = await ChatRoomCollection.addFile(
-        req.params.chatRoomId,
-        fileId
-      );
-      const response = util.constructChatRoomResponse(chatRoom);
-      res.status(200).json(response);
     }
   }
 );
