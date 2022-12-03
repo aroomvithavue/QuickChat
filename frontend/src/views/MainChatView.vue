@@ -197,6 +197,9 @@ export default {
         this.joinRoom(toParams.keyword);
       }
     );
+
+    const randomId = Math.floor(Math.random() * 99999);
+    this.username = `Anonymous_${randomId}`;
   },
   updated() {
     //autoscroll to bottom of chat, if user is not scrolling up
