@@ -271,6 +271,10 @@ export default {
         this.messages = res.messages;
       } catch (e) {
         console.log("Could not fetch messages:", e);
+        this.$store.commit("alert", {
+          message: `Chat "${this.joinedRoom}" not found`,
+          status: "error",
+        });
         this.$router.push({ name: "home" });
       }
     },

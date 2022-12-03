@@ -48,9 +48,17 @@ export default {
   methods: {
     handleJoin(e) {
       e.preventDefault();
+      const keyword = e.target[0].value;
+      if (keyword === "") {
+        this.$store.commit("alert", {
+          message: "Keyword cannot be empty",
+          status: "error",
+        });
+        return;
+      }
       this.$router.push({
         name: "chat",
-        params: { keyword: e.target[0].value },
+        params: { keyword },
       });
     },
     async handleGenerate(e) {

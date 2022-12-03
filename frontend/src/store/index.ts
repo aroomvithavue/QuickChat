@@ -4,9 +4,18 @@ import Vuex from "vuex";
 Vue.use(Vuex);
 
 export default new Vuex.Store({
-  state: {},
+  state: {
+    alerts: {},
+  },
   getters: {},
-  mutations: {},
+  mutations: {
+    alert(state, payload) {
+      Vue.set(state.alerts, payload.message, payload.status);
+      setTimeout(() => {
+        Vue.delete(state.alerts, payload.message);
+      }, 3000);
+    },
+  },
   actions: {},
   modules: {},
 });
