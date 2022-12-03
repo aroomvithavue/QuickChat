@@ -27,14 +27,16 @@ if (!mongoConnectionUrl) {
   throw new Error("Please add the MongoDB connection SRV as 'MONGO_SRV'");
 }
 
-let bucket;
+let bucket: any;
 
 mongoose
   .connect(mongoConnectionUrl)
   .then((m) => {
     console.log("Connected to MongoDB");
     const db = m.connection.db;
-    bucket = new mongoose.mongo.GridFSBucket(db);
+    bucket = new mongoose.mongo.GridFSBucket(db, {
+      bucketName: "newBucket",
+    });
   })
   .catch((err) => {
     console.error(`Error connecting to MongoDB: ${err.message as string}`);
@@ -120,6 +122,27 @@ app.post(
     res.status(201).json(response);
   }
 );
+
+app.get("/api/files/:id", async (req, res) => {
+  const validFormat = mongoose.Types.ObjectId.isValid(req.params.id);
+  if (!validFormat) {
+    return res.status(400).json({
+      err: `Inavlid ObjectId format`,
+    });
+  }
+  const query = await bucket.find({
+    _id: new mongoose.Types.ObjectId(req.params.id),
+  });
+  const files: Array<any> = await query.toArray();
+  if (files.length === 0) {
+    return res.status(404).json({
+      err: `no file with id ${req.params.id} exist`,
+    });
+  }
+  bucket
+    .openDownloadStream(new mongoose.Types.ObjectId(req.params.id))
+    .pipe(res);
+});
 
 // Catch all the other routes and display error message
 app.all("*", (req: Request, res: Response) => {
