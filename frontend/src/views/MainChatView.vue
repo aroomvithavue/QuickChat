@@ -239,15 +239,11 @@ export default {
 
     // receive happyVote
     this.socketInstance.on("happyVote:received", (data) => {
-      console.log("receiving happyVote");
-      console.log(data);
       this.happyCount = data.happy;
     });
 
     // receive confusedVote
     this.socketInstance.on("confusedVote:received", (data) => {
-      console.log("receiving confusedVote");
-      console.log(data);
       this.confusedCount = data.confused;
     });
 
@@ -326,8 +322,7 @@ export default {
         chatroomKey: this.joinedRoom,
       };
       this.socketInstance.emit("confusedVote", confusedVote); // send confused vote to others
-      console.log("old confused counts");
-      console.log(this.confusedCount);
+
       if (this.userVotedConfused) {
         this.confusedCount -= 1;
       } else {
@@ -343,8 +338,7 @@ export default {
         chatroomKey: this.joinedRoom,
       };
       this.socketInstance.emit("happyVote", happyVote); // send happy vote to others
-      console.log("old happy counts");
-      console.log(this.happyCount);
+
       if (this.userVotedHappy) {
         this.happyCount -= 1;
       } else {

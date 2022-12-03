@@ -143,8 +143,6 @@ io.on("connection", (socket) => {
       data.reaction,
       data.user,
     );
-    console.log("totalCounts")
-    console.log(totalCounts)
     socket.to(data.chatroomKey).emit("confusedVote:received", totalCounts);
   });
 
@@ -154,8 +152,6 @@ io.on("connection", (socket) => {
       data.reaction,
       data.user,
     );
-    console.log("totalCounts")
-    console.log(totalCounts)
     socket.to(data.chatroomKey).emit("happyVote:received", totalCounts);
   });
 
