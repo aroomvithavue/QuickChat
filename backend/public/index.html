@@ -51,10 +51,14 @@
         </form>
 
         <form id="add-message">
-          <h3>Add Message</h3>
+          <h3>Add Message or File</h3>
           <div>
             <label for="id">Chat Id:</label>
             <input id="id" name="id">
+          </div>
+          <div>
+            <label for="edit">Edit ("message" | "file"):</label>
+            <textarea id="edit" name="edit"></textarea>
           </div>
           <div>
             <label for="message">Message:</label>
@@ -64,7 +68,11 @@
             <label for="author">Author:</label>
             <textarea id="author" name="author"></textarea>
           </div>
-          <input type="submit" value="Add Message">
+          <div>
+            <label for="fileId">File Id:</label>
+            <textarea id="fileId" name="fileId"></textarea>
+          </div>
+          <input type="submit" value="Add Message or File">
         </form>
 
         <form id="delete-chat">
