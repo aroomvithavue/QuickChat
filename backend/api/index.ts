@@ -114,6 +114,11 @@ app.post(
   "/api/chatRooms/:chatRoomId/files",
   [chatRoomValidator.doesChatRoomExist, upload.single("file")],
   async (req: Request, res: Response) => {
+    if (req.file === undefined) {
+      return res.status(400).json({
+        err: `No file provided`,
+      });
+    }
     const file: any = req.file;
     const id = req.params.chatRoomId;
     const fileId = file.id;
