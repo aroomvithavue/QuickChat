@@ -125,17 +125,21 @@
     <div class="flex flex-col w-3/4">
       <!-- Chat Header Code -->
       <header class="py-4 border-b-4">
-        <ChatHeader />
+        <ChatHeader
+          @switchToChat="changeToChat"
+          @switchToFiles="changeToFiles"
+        />
       </header>
       <!-- Chat Header Code -->
 
+      <!-- FilesTab Code -->
+      <section
+        id="filesContainer"
+        @scroll="handleScroll"
+        v-if="inFilesTabView"
+        class="overflow-y-auto"
+      ></section>
       <!-- Chat Code -->
-      <section v-if="joinedRoom.length === 0">
-        <p>Available rooms by room keyword (click to join):</p>
-        <div v-for="room in rooms" :key="room" @click="joinRoom(room)">
-          <button class="btn">{{ room }}</button>
-        </div>
-      </section>
       <section
         id="messageContainer"
         @scroll="handleScroll"
@@ -154,7 +158,6 @@
         </div>
       </section>
       <footer
-        v-if="joinedRoom.length !== 0"
         class="mt-auto py-4 border-t-4 flex flex-wrap -mb-px items-center justify-center"
       >
         <label for="chat" class="sr-only">Your Message</label>
@@ -188,6 +191,7 @@
             <span class="sr-only">Send message</span>
           </button>
           <button
+            @click="uploadFile"
             type="button"
             class="p-2 text-gray-500 rounded-lg cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600"
           >
@@ -220,6 +224,7 @@ export default {
       happyCount: 0,
       userVotedConfused: false,
       userVotedHappy: false,
+      inFilesTabView: false,
     };
   },
   created() {
@@ -291,6 +296,11 @@ export default {
       this.messages = this.messages.concat(message); // show message in my client
       this.socketInstance.emit("message", message); // send message to others
       this.text = ""; // intialize input
+      this.inFilesTabView = false;
+    },
+    uploadFile() {
+      // functionality for uploading files could be added here
+      this.inFilesTabView = true;
     },
     changeName() {
       this.socketInstance.emit("username", {
@@ -378,6 +388,10 @@ export default {
         this.messages = res.messages;
       } catch (e) {
         console.log("Could not fetch messages:", e);
+        this.$store.commit("alert", {
+          message: `Chat "${this.joinedRoom}" not found`,
+          status: "error",
+        });
         this.$router.push({ name: "home" });
       }
 
@@ -411,6 +425,12 @@ export default {
       } else {
         this.scrolling = true;
       }
+    },
+    changeToChat() {
+      this.inFilesTabView = false;
+    },
+    changeToFiles() {
+      this.inFilesTabView = true;
     },
   },
 };
