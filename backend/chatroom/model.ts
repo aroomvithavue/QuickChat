@@ -5,7 +5,7 @@ export type ChatRoom = {
   _id: Types.ObjectId;
   keyword: string;
   dateCreated: Date;
-  dateExpired: Date;
+  expireAt: Date;
   messages: Array<{ text: string; date: Date; author: string }>;
   files: Array<{ fileId: string; filename: string; date: Date }>;
 };
@@ -19,8 +19,10 @@ const ChatRoomSchema = new Schema<ChatRoom>({
     type: Date,
     required: true,
   },
-  dateExpired: {
+  expireAt: {
     type: Date,
+    expires: 0,
+    index: true,
     required: true,
   },
   messages: [

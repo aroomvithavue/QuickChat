@@ -7,7 +7,7 @@ export type ChatRoomResponse = {
   _id: Types.ObjectId;
   keyword: string;
   dateCreated: Date;
-  dateExpired: Date;
+  expireAt: Date;
   messages: Array<{ text: string; date: Date; author: string }>;
   files: Array<{fileId: string, date: Date}>;
 };
