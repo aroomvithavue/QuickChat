@@ -31,7 +31,7 @@ class ChatRoomCollection {
     const chatroom = new ChatRoomModel({
       keyword,
       dateCreated: date,
-      dateExpired: date2,
+      expireAt: date2,
       messages: [],
       files: [],
     });
