@@ -108,6 +108,7 @@
         v-else
         class="overflow-y-auto"
       >
+        <div class="chat-start chat-end hidden"></div>
         <div
           :class="`chat chat-${message.author === username ? 'end' : 'start'}`"
           v-for="message in messages"
