@@ -97,14 +97,14 @@ This renders the `index.html` file that will be used to interact with the backen
 
 **Returns**
 
-- A file with an id `id`
+- A file with an id of `id`
 
 **Throws**
 
 - `400` if `id` is not given or is invalid
 - `404` if no file has id of `id`
 
-#### `GET /api/groupVibes?keyword=KEY` - Get happy and sad counts for a group vibe based on a chat room keyword
+#### `GET /api/groupVibes?keyword=KEY` - Get happy and confused counts for a group vibe based on a chat room keyword
 
 **Returns**
 
