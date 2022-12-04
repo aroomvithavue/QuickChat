@@ -33,7 +33,7 @@ class ChatRoomCollection {
       dateCreated: date,
       dateExpired: date2,
       messages: [],
-      files: []
+      files: [],
     });
 
     await chatroom.save();
@@ -129,15 +129,15 @@ class ChatRoomCollection {
    * @param file id of file
    * @returns {Promise<HydratedDocument<ChatRoom>>} - the newly updated chat room
    */
-   static async addFile(
+  static async addFile(
     chatRoomId: Types.ObjectId | string,
-    file: string
+    file: string,
+    filename: string
   ): Promise<HydratedDocument<ChatRoom>> {
-    
     const chatroom = await ChatRoomModel.findOne({ _id: chatRoomId });
     const fileDate = new Date();
-    chatroom.files.push({fileId: file, date: fileDate});
-    
+    chatroom.files.push({ fileId: file, filename, date: fileDate });
+
     await chatroom.save();
     return chatroom;
   }
@@ -150,15 +150,15 @@ class ChatRoomCollection {
    * @param file id of file
    * @returns {Promise<HydratedDocument<ChatRoom>>} - the newly updated chat room
    */
-   static async addFileByKeyword(
+  static async addFileByKeyword(
     chatKeyword: string,
-    file: string
+    file: string,
+    filename: string
   ): Promise<HydratedDocument<ChatRoom>> {
-    
     const chatroom = await ChatRoomModel.findOne({ keyword: chatKeyword });
     const fileDate = new Date();
-    chatroom.files.push({fileId: file, date: fileDate});
-    
+    chatroom.files.push({ fileId: file, filename, date: fileDate });
+
     await chatroom.save();
     return chatroom;
   }

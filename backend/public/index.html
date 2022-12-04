@@ -1,5 +1,4 @@
 <html>
-
 <head>
   <title>Fritter</title>
   <meta name="author" content="6.170 Staff">
@@ -9,30 +8,53 @@
   <script src="/scripts/group_vibe.js"></script>
   <script src="/scripts/index.js"></script>
 </head>
+  <body>
+    <header>
+      <h1>QuickChat</h1>
+    </header>
 
-<body>
-  <header>
-    <h1>QuickChat</h1>
-  </header>
+    <main class="two-col">
+      <section id="operations-container">
+        <h2>Operations:</h2>
+        <div class="scrollbox">
+          <form id="view-all-chats">
+            <h3>View All Chats</h3>
+            <input type="submit" value="View All Chats" />
+          </form>
 
-  <main class="two-col">
-    <section id="operations-container">
-      <h2>Operations:</h2>
-      <div class="scrollbox">
+          <form id="view-chat-by-keyword">
+            <h3>View Chat By Keyword</h3>
+            <div>
+              <label for="key">Keyword:</label>
+              <input id="key" name="key" />
+            </div>
+            <input type="submit" value="View Chat By Keyword" />
+          </form>
 
-        <form id="view-all-chats">
-          <h3>View All Chats</h3>
-          <input type="submit" value="View All Chats">
-        </form>
+          <form
+            id="post-file"
+            <h3>Post a file</h3>
+	    <input type="text" name="id">
+            <input type="file" name="filename" />
+            <input type="submit" value="Upload" />
+          </form>
 
-        <form id="view-chat-by-keyword">
-          <h3>View Chat By Keyword</h3>
-          <div>
-            <label for="key">Keyword:</label>
-            <input id="key" name="key">
-          </div>
-          <input type="submit" value="View Chat By Keyword">
-        </form>
+          <form id="create-chat">
+            <h3>Create Chat</h3>
+            <div>
+              <label for="keyword">Keyword:</label>
+              <textarea id="keyword" name="keyword"></textarea>
+            </div>
+            <div>
+              <label for="days">Days until expiration:</label>
+              <textarea id="days" name="days"></textarea>
+            </div>
+            <div>
+              <label for="hours">Hours until expiration:</label>
+              <textarea id="hours" name="hours"></textarea>
+            </div>
+            <input type="submit" value="Create Chat" />
+          </form>
 
         <form id="create-chat">
           <h3>Create Chat</h3>
@@ -130,5 +152,4 @@
     </section>
   </main>
 </body>
-
 </html>

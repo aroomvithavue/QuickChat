@@ -83,15 +83,10 @@ const isValidChatRoom = async (
 /**
  * Checks if the new message is valid.
  */
-const isValidEdit = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-
+const isValidEdit = async (req: Request, res: Response, next: NextFunction) => {
   const editType = req.body.edit as string;
-  
-  if (editType === "message"){
+
+  if (editType === "message") {
     const message = req.body.message as string;
     if (!message.trim()) {
       res.status(400).json({
@@ -107,8 +102,7 @@ const isValidEdit = async (
       });
       return;
     }
-  }
-  else if (editType === "file"){
+  } else if (editType === "file") {
     const fileId = req.body.fileId as string;
     if (!fileId.trim()) {
       res.status(400).json({
@@ -116,10 +110,10 @@ const isValidEdit = async (
       });
       return;
     }
-  }
-  else{
+  } else {
     res.status(400).json({
-      error: "A chat room edit must be either adding a message or adding a file.",
+      error:
+        "A chat room edit must be either adding a message or adding a file.",
     });
     return;
   }
