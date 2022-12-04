@@ -13,6 +13,9 @@ import { groupVibeRouter } from "../group_vibe/router";
 import { Server } from "socket.io";
 import ChatRoomCollection from "../chatroom/collection";
 import GroupVibeCollection from "../group_vibe/collection";
+import multer from "multer";
+import { GridFsStorage } from "multer-gridfs-storage";
+import * as chatRoomValidator from "../chatroom/middleware";
 
 const cors = require("cors");
 
@@ -25,11 +28,16 @@ if (!mongoConnectionUrl) {
   throw new Error("Please add the MongoDB connection SRV as 'MONGO_SRV'");
 }
 
+let bucket: any;
+
 mongoose
   .connect(mongoConnectionUrl)
   .then((m) => {
     console.log("Connected to MongoDB");
-    const db = m.connection;
+    const db = m.connection.db;
+    bucket = new mongoose.mongo.GridFSBucket(db, {
+      bucketName: "newBucket",
+    });
   })
   .catch((err) => {
     console.error(`Error connecting to MongoDB: ${err.message as string}`);
@@ -38,6 +46,22 @@ mongoose
 mongoose.connection.on("error", (err) => {
   console.error(err);
 });
+
+const storage = new GridFsStorage({
+  url: mongoConnectionUrl,
+  file: (req, file) => {
+    return new Promise((resolve, reject) => {
+      const filename = file.originalname;
+      const fileInfo = {
+        filename: filename,
+        bucketName: "newBucket",
+      };
+      resolve(fileInfo);
+    });
+  },
+});
+
+const upload = multer({ storage });
 
 // Initalize an express app
 const app = express();
@@ -86,6 +110,46 @@ app.get("/", (req: Request, res: Response) => {
 // Add routers from routes folder
 app.use("/api/chatRooms", chatRoomRouter);
 app.use("/api/groupVibes", groupVibeRouter);
+
+app.post(
+  "/api/chatRooms/:chatRoomId/files",
+  [chatRoomValidator.doesChatRoomExist, upload.single("file")],
+  async (req: Request, res: Response) => {
+    if (req.file === undefined) {
+      return res.status(400).json({
+        err: `No file provided`,
+      });
+    }
+    const file: any = req.file;
+    const id = req.params.chatRoomId;
+    const fileId = file.id;
+    const filename = file.filename;
+    ChatRoomCollection.addFile(id, fileId, filename);
+    const response = { message: "success" };
+    res.status(201).json(response);
+  }
+);
+
+app.get("/api/files/:id", async (req, res) => {
+  const validFormat = mongoose.Types.ObjectId.isValid(req.params.id);
+  if (!validFormat) {
+    return res.status(400).json({
+      err: `Inavlid ObjectId format`,
+    });
+  }
+  const query = await bucket.find({
+    _id: new mongoose.Types.ObjectId(req.params.id),
+  });
+  const files: Array<any> = await query.toArray();
+  if (files.length === 0) {
+    return res.status(404).json({
+      err: `no file with id ${req.params.id} exist`,
+    });
+  }
+  bucket
+    .openDownloadStream(new mongoose.Types.ObjectId(req.params.id))
+    .pipe(res);
+});
 
 // Catch all the other routes and display error message
 app.all("*", (req: Request, res: Response) => {
