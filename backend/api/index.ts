@@ -125,7 +125,7 @@ app.post(
     const fileId = file.id;
     const filename = file.filename;
     ChatRoomCollection.addFile(id, fileId, filename);
-    const response = { message: "success" };
+    const response = { file };
     res.status(201).json(response);
   }
 );
@@ -205,7 +205,7 @@ io.on("connection", (socket) => {
     const totalCounts = await GroupVibeCollection.updateOne(
       data.chatroomKey,
       data.reaction,
-      data.user,
+      data.user
     );
     socket.to(data.chatroomKey).emit("confusedVote:received", totalCounts);
   });
@@ -214,9 +214,12 @@ io.on("connection", (socket) => {
     const totalCounts = await GroupVibeCollection.updateOne(
       data.chatroomKey,
       data.reaction,
-      data.user,
+      data.user
     );
     socket.to(data.chatroomKey).emit("happyVote:received", totalCounts);
+  });
+  socket.on("fileChange", async (data) => {
+    socket.to(data.roomName).emit("fileChange:received", data);
   });
 
   socket.on("username", (data) => {

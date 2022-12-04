@@ -244,6 +244,10 @@ export default {
     this.socketInstance.on("confusedVote:received", (data) => {
       this.confusedCount = data.confused;
     });
+    // Update files
+    this.socketInstance.on("fileChange:received", async (data) => {
+      await this.refreshFiles();
+    });
 
     // reflect changed name
     this.socketInstance.on("username:received", (data) => {
@@ -291,6 +295,20 @@ export default {
       this.text = ""; // intialize input
       this.inFilesTabView = false;
     },
+    async refreshFiles() {
+      const isProd = process.env.NODE_ENV === "production";
+      const url =
+        (isProd
+          ? "https://quickchat-api-61040.herokuapp.com/"
+          : "http://localhost:3000/") +
+        `api/chatRooms?keyword=${this.joinedRoom}`;
+      const r = await fetch(url);
+      const res = await r.json();
+      if (!r.ok) {
+        throw new Error(res.error);
+      }
+      this.files = res.files;
+    },
     async handleFileUpload(e) {
       // functionality for uploading files could be added here
       e.preventDefault();
@@ -308,7 +326,10 @@ export default {
           message: (await res.json()).err,
           status: "error",
         });
+        return;
       }
+      this.socketInstance.emit("fileChange", { roomName: this.joinedRoom });
+      this.refreshFiles();
       this.inFilesTabView = true;
     },
     async handleFileDownload(id, filename) {
