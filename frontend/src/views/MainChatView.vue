@@ -25,31 +25,8 @@
               class="mt-2 p-2 text-gray-500 rounded-lg cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600"
             >
               <img
-                v-if="this.confusedCount === 0"
-                src="https://img.icons8.com/ios-glyphs/30/null/question--v1.png"
-              />
-              <img
-                v-if="this.confusedCount === 1"
-                src="https://img.icons8.com/ios-glyphs/35/null/question--v1.png"
-              />
-              <img
-                v-if="this.confusedCount === 2"
-                src="https://img.icons8.com/ios-glyphs/40/null/question--v1.png"
-              />
-              <img
-                v-if="this.confusedCount === 3"
-                src="https://img.icons8.com/ios-glyphs/50/null/question--v1.png"
-              />
-              <img
-                v-if="this.confusedCount === 4"
-                src="https://img.icons8.com/ios-glyphs/60/null/question--v1.png"
-              />
-              <img
-                v-if="this.confusedCount === 5"
-                src="https://img.icons8.com/ios-glyphs/70/null/question--v1.png"
-              />
-              <img
-                v-if="this.confusedCount >= 6"
+                :width="20 + Math.min(6 * this.confusedCount, 60)"
+                :height="20 + Math.min(6 * this.confusedCount, 60)"
                 src="https://img.icons8.com/ios-glyphs/80/null/question--v1.png"
               />
               <p v-if="this.confusedCount !== 0">{{ this.confusedCount }}</p>
@@ -61,31 +38,8 @@
               class="mt-2 p-2 text-gray-500 rounded-lg cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600"
             >
               <img
-                v-if="this.happyCount === 0"
-                src="https://img.icons8.com/material-outlined/30/null/smiling.png"
-              />
-              <img
-                v-if="this.happyCount === 1"
-                src="https://img.icons8.com/material-outlined/35/null/smiling.png"
-              />
-              <img
-                v-if="this.happyCount === 2"
-                src="https://img.icons8.com/material-outlined/40/null/smiling.png"
-              />
-              <img
-                v-if="this.happyCount === 3"
-                src="https://img.icons8.com/material-outlined/50/null/smiling.png"
-              />
-              <img
-                v-if="this.happyCount === 4"
-                src="https://img.icons8.com/material-outlined/60/null/smiling.png"
-              />
-              <img
-                v-if="this.happyCount === 5"
-                src="https://img.icons8.com/material-outlined/70/null/smiling.png"
-              />
-              <img
-                v-if="this.happyCount >= 6"
+                :width="20 + Math.min(6 * this.happyCount, 60)"
+                :height="20 + Math.min(6 * this.happyCount, 60)"
                 src="https://img.icons8.com/material-outlined/80/null/smiling.png"
               />
               <p v-if="this.happyCount !== 0">{{ this.happyCount }}</p>
