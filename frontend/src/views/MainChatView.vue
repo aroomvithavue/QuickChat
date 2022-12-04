@@ -488,6 +488,7 @@ export default {
         roomName: this.joinedRoom,
       });
       this.joinedRoom = "";
+      this.$router.push("/");
     },
     handleScroll(e) {
       //Check if user is scrolling, if so we don't want to autoscroll to bottom on new messages received.
