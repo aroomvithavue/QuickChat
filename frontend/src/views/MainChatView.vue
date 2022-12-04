@@ -16,8 +16,35 @@
           <p>RoomView101</p>
         </div>
         <div class="mt-10">
-          <h1 class="font-bold">Vibe</h1>
-          <p>some emojis</p>
+          <h1 class="font-bold">Group Vibe</h1>
+          <div class="flex flex-col justify-center content-center items-center">
+            <button
+              type="button"
+              id="confused"
+              @click="voteConfused"
+              class="mt-2 p-2 text-gray-500 rounded-lg cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600"
+            >
+              <img
+                :width="20 + Math.min(6 * this.confusedCount, 60)"
+                :height="20 + Math.min(6 * this.confusedCount, 60)"
+                src="https://img.icons8.com/ios-glyphs/80/null/question--v1.png"
+              />
+              <p v-if="this.confusedCount !== 0">{{ this.confusedCount }}</p>
+            </button>
+            <button
+              type="button"
+              id="happy"
+              @click="voteHappy"
+              class="mt-2 p-2 text-gray-500 rounded-lg cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600"
+            >
+              <img
+                :width="20 + Math.min(6 * this.happyCount, 60)"
+                :height="20 + Math.min(6 * this.happyCount, 60)"
+                src="https://img.icons8.com/material-outlined/80/null/smiling.png"
+              />
+              <p v-if="this.happyCount !== 0">{{ this.happyCount }}</p>
+            </button>
+          </div>
         </div>
       </div>
       <footer v-if="joinedRoom.length !== 0" class="mt-auto py-10">
@@ -91,22 +118,6 @@
         <div
           class="flex items-center w-full px-3 py-2 rounded-lg dark:bg-gray-700"
         >
-          <button
-            type="button"
-            class="p-2 text-gray-500 rounded-lg cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600"
-          >
-            <img
-              src="https://img.icons8.com/ios-glyphs/30/000000/question--v1.png"
-            />
-          </button>
-          <button
-            type="button"
-            class="p-2 text-gray-500 rounded-lg cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600"
-          >
-            <img
-              src="https://img.icons8.com/material-outlined/30/null/smiling.png"
-            />
-          </button>
           <textarea
             id="chat"
             rows="1"
@@ -163,6 +174,10 @@ export default {
       rooms: ["apple"], // list of strings (room names)
       joinedRoom: "",
       scrolling: false,
+      confusedCount: 0,
+      happyCount: 0,
+      userVotedConfused: false,
+      userVotedHappy: false,
       inFilesTabView: false,
     };
   },
@@ -179,6 +194,16 @@ export default {
     // receive message
     this.socketInstance.on("message:received", (data) => {
       this.messages = this.messages.concat(data);
+    });
+
+    // receive happyVote
+    this.socketInstance.on("happyVote:received", (data) => {
+      this.happyCount = data.happy;
+    });
+
+    // receive confusedVote
+    this.socketInstance.on("confusedVote:received", (data) => {
+      this.confusedCount = data.confused;
     });
 
     // reflect changed name
@@ -256,6 +281,38 @@ export default {
         return message;
       });
     },
+    voteConfused() {
+      // Emit Confused Reaction
+      const confusedVote = {
+        reaction: "confused",
+        user: this.username,
+        chatroomKey: this.joinedRoom,
+      };
+      this.socketInstance.emit("confusedVote", confusedVote); // send confused vote to others
+
+      if (this.userVotedConfused) {
+        this.confusedCount -= 1;
+      } else {
+        this.confusedCount += 1;
+      }
+      this.userVotedConfused = !this.userVotedConfused;
+    },
+    async voteHappy() {
+      // Emit Happy Reaction
+      const happyVote = {
+        reaction: "happy",
+        user: this.username,
+        chatroomKey: this.joinedRoom,
+      };
+      this.socketInstance.emit("happyVote", happyVote); // send happy vote to others
+
+      if (this.userVotedHappy) {
+        this.happyCount -= 1;
+      } else {
+        this.happyCount += 1;
+      }
+      this.userVotedHappy = !this.userVotedHappy;
+    },
     async joinRoom(room) {
       this.socketInstance.emit("join-room", {
         roomName: room,
@@ -268,7 +325,11 @@ export default {
         (isProd
           ? "https://quickchat-api-61040.herokuapp.com/"
           : "http://localhost:3000/") + `api/chatRooms?keyword=${room}`;
-      //   const url = `http://localhost:3000/api/chatRooms?keyword=${room}`;
+      const groupVibesCountURL =
+        (isProd
+          ? "https://quickchat-api-61040.herokuapp.com/"
+          : "http://localhost:3000/") +
+        `api/groupVibes?keyword=${this.joinedRoom}`;
 
       try {
         const r = await fetch(url);
@@ -286,6 +347,22 @@ export default {
           status: "error",
         });
         this.$router.push({ name: "home" });
+      }
+
+      // Getting Initial Group Vibe Counts
+      try {
+        const r = await fetch(groupVibesCountURL);
+        const res = await r.json();
+        if (!r.ok) {
+          throw new Error(res.error);
+        }
+
+        this.happyCount = res.happy;
+        this.confusedCount = res.confused;
+      } catch (e) {
+        console.log("Could not fetch counts for group vibe:", e);
+        this.happyCount = 0;
+        this.confusedCount = 0;
       }
     },
     leaveRoom() {

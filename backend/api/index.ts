@@ -12,6 +12,7 @@ import { chatRoomRouter } from "../chatroom/router";
 import { groupVibeRouter } from "../group_vibe/router";
 import { Server } from "socket.io";
 import ChatRoomCollection from "../chatroom/collection";
+import GroupVibeCollection from "../group_vibe/collection";
 import multer from "multer";
 import { GridFsStorage } from "multer-gridfs-storage";
 import * as chatRoomValidator from "../chatroom/middleware";
@@ -198,6 +199,24 @@ io.on("connection", (socket) => {
       data.username
     );
     socket.to(data.roomName).emit("message:received", data);
+  });
+
+  socket.on("confusedVote", async (data) => {
+    const totalCounts = await GroupVibeCollection.updateOne(
+      data.chatroomKey,
+      data.reaction,
+      data.user,
+    );
+    socket.to(data.chatroomKey).emit("confusedVote:received", totalCounts);
+  });
+
+  socket.on("happyVote", async (data) => {
+    const totalCounts = await GroupVibeCollection.updateOne(
+      data.chatroomKey,
+      data.reaction,
+      data.user,
+    );
+    socket.to(data.chatroomKey).emit("happyVote:received", totalCounts);
   });
 
   socket.on("username", (data) => {
