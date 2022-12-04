@@ -109,14 +109,20 @@
         class="overflow-y-auto"
       >
         <div
-          class="chat chat-start"
+          :class="`chat chat-${message.author === username ? 'end' : 'start'}`"
           v-for="message in messages"
           :key="message.id"
         >
           <div class="chat-header">
             {{ message.author }}
           </div>
-          <div class="chat-bubble">{{ message.text }}</div>
+          <div
+            :class="`chat-bubble ${
+              message.author === username ? 'chat-bubble-primary' : ''
+            }`"
+          >
+            {{ message.text }}
+          </div>
         </div>
       </section>
       <footer
