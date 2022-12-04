@@ -12,10 +12,6 @@
           <p>{{ joinedRoom }}</p>
         </div>
         <div class="mt-10">
-          <h1 class="font-bold">Participants</h1>
-          <p>RoomView101</p>
-        </div>
-        <div class="mt-10">
           <h1 class="font-bold">Group Vibe</h1>
           <div class="flex flex-col justify-center content-center items-center">
             <button
