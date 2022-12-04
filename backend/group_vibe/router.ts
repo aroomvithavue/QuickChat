@@ -40,7 +40,7 @@ router.get(
  * @param {string} keyword - the keyword of the chat room
  * @param {string} reaction - reaction
  * @param {string} user - user
- * @return {{happy: number, confused: number}} - the updated chat room
+ * @return {{happy: number, confused: number}} - the updated happy and confused counts
  * @throws {400} - if keyword is not given
  * @throws {404} - if no chat room has given keyword
  * @throws {400} - if the reaction is not "happy" or "confused"

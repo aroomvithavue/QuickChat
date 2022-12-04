@@ -42,7 +42,7 @@ This renders the `index.html` file that will be used to interact with the backen
 **Returns**
 
 - A success message
-- A object with the created chat room
+- An object with the created chat room
 
 **Throws**
 
@@ -76,3 +76,78 @@ This renders the `index.html` file that will be used to interact with the backen
 **Throws**
 
 - `404` if the `chatRoomId` is invalid
+
+#### `POST /api/chatRooms/:chatRoomId/files` - Add a new file to a chat room
+
+**Body**
+
+- `file` _{any}_ - the file
+
+**Returns**
+
+- A success message
+- An object with the updated chat room
+
+**Throws**
+
+- `404` if the `chatRoomId` is invalid
+- `400` if `file` is not given
+
+#### `GET /api/files/:id` - Gets a file by its id
+
+**Returns**
+
+- A file with an id of `id`
+
+**Throws**
+
+- `400` if `id` is not given or is invalid
+- `404` if no file has id of `id`
+
+#### `GET /api/groupVibes?keyword=KEY` - Get happy and confused counts for a group vibe based on a chat room keyword
+
+**Returns**
+
+- Happy and confused counts for the chat room with the given `keyword`
+
+**Throws**
+
+- `400` if `keyword` is not given
+- `404` if no chat room has keyword of `keyword`
+
+#### `PATCH /api/groupVibes` - Modify a group vibe (by adding a reaction)
+
+**Body**
+
+- `keyword` _{string}_ - the keyword of the chat room
+- `reaction` _{string}_ - the reaction
+- `user` _{string}_ - the user
+
+**Returns**
+
+- A success message
+- The updated happy and confused counts
+
+**Throws**
+
+- `400` if `keyword` is not given
+- `404` if no chat room has the given `keyword`
+- `400` if `reaction` is not "happy" or "confused"
+- `400` if `user` is empty
+
+#### `DELETE /api/groupVibes/:groupVibeId?` - Delete an existing group vibe
+
+**Returns**
+
+- A success message
+
+**Throws**
+
+- `404` if the `groupVibeId` is invalid
+
+
+
+
+
+
+
