@@ -82,6 +82,7 @@
         <ChatHeader
           @switchToChat="changeToChat"
           @switchToFiles="changeToFiles"
+          :filesTabView="inFilesTabView"
         />
       </header>
       <!-- Chat Header Code -->
@@ -92,7 +93,18 @@
         @scroll="handleScroll"
         v-if="inFilesTabView"
         class="overflow-y-auto"
-      ></section>
+      >
+        <ul class="menu bg-base-100 w-full my-8">
+          <li
+            v-for="f in files"
+            :key="f._id"
+            class="bordered mx-16 my-1"
+            @click="() => handleFileDownload(f.fileId, f.filename)"
+          >
+            <a>{{ f.filename }}</a>
+          </li>
+        </ul>
+      </section>
       <!-- Chat Code -->
       <section
         id="messageContainer"
@@ -144,13 +156,38 @@
             </svg>
             <span class="sr-only">Send message</span>
           </button>
-          <button
-            @click="uploadFile"
-            type="button"
-            class="p-2 text-gray-500 rounded-lg cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600"
-          >
-            <img src="https://img.icons8.com/windows/32/null/file-upload.png" />
-          </button>
+          <label for="upload-modal" class="btn btn-ghost">
+            <img src="https://img.icons8.com/windows/32/null/file-upload.png"
+          /></label>
+          <!-- Upload file modal -->
+          <input type="checkbox" id="upload-modal" class="modal-toggle" />
+          <div class="modal">
+            <div class="modal-box relative">
+              <label
+                for="upload-modal"
+                class="btn btn-sm btn-circle absolute right-2 top-2"
+                >✕</label
+              >
+              <form @submit="handleFileUpload" class="flex flex-col gap-4">
+                <h3 class="text-xl font-semibold">Upload file to chat</h3>
+                <input
+                  type="file"
+                  name="file"
+                  class="file-input file-input-bordered file-input-primary w-full max-w-s"
+                />
+
+                <button
+                  type="submit"
+                  class="btn btn-primary max-w-xs w-24 self-end"
+                >
+                  <label for="upload-modal" class="btn btn-ghost max-w-xs w-24"
+                    >Submit</label
+                  >
+                </button>
+              </form>
+            </div>
+          </div>
+          <!-- Upload file modal -->
         </div>
       </footer>
 
@@ -179,6 +216,8 @@ export default {
       userVotedConfused: false,
       userVotedHappy: false,
       inFilesTabView: false,
+      files: [],
+      roomId: "",
     };
   },
   created() {
@@ -204,6 +243,10 @@ export default {
     // receive confusedVote
     this.socketInstance.on("confusedVote:received", (data) => {
       this.confusedCount = data.confused;
+    });
+    // Update files
+    this.socketInstance.on("fileChange:received", async (data) => {
+      await this.refreshFiles();
     });
 
     // reflect changed name
@@ -252,9 +295,79 @@ export default {
       this.text = ""; // intialize input
       this.inFilesTabView = false;
     },
-    uploadFile() {
+    async refreshFiles() {
+      const isProd = process.env.NODE_ENV === "production";
+      const url =
+        (isProd
+          ? "https://quickchat-api-61040.herokuapp.com/"
+          : "http://localhost:3000/") +
+        `api/chatRooms?keyword=${this.joinedRoom}`;
+      const r = await fetch(url);
+      const res = await r.json();
+      if (!r.ok) {
+        throw new Error(res.error);
+      }
+      this.files = res.files;
+    },
+    async handleFileUpload(e) {
       // functionality for uploading files could be added here
+      e.preventDefault();
+      const data = new FormData(e.target);
+      const isProd = process.env.NODE_ENV === "production";
+      const url = isProd
+        ? "https://quickchat-api-61040.herokuapp.com"
+        : "http://localhost:3000";
+      const res = await fetch(`${url}/api/chatRooms/${this.roomId}/files`, {
+        method: "POST",
+        body: data,
+      });
+      if (res.status != 201) {
+        this.$store.commit("alert", {
+          message: (await res.json()).err,
+          status: "error",
+        });
+        return;
+      }
+      this.socketInstance.emit("fileChange", { roomName: this.joinedRoom });
+      this.refreshFiles();
       this.inFilesTabView = true;
+    },
+    async handleFileDownload(id, filename) {
+      // functionality for uploading files could be added here
+      const isProd = process.env.NODE_ENV === "production";
+      const url = isProd
+        ? "https://quickchat-api-61040.herokuapp.com"
+        : "http://localhost:3000";
+      const res = await fetch(`${url}/api/files/${id}`);
+      if (res.status != 200) {
+        this.$store.commit("alert", {
+          message: (await res.json()).err,
+          status: "error",
+        });
+        return;
+      }
+      const data = await res.blob();
+      const blob = new Blob([data], { type: "application/octet-stream" });
+      // blob.type = "application/octet-stream";
+      if (typeof window.navigator.msSaveBlob !== "undefined") {
+        window.navigator.msSaveBlob(blob, filename);
+        return;
+      }
+      const blobURL = window.URL.createObjectURL(blob);
+      const tempLink = document.createElement("a");
+      tempLink.style.display = "none";
+      tempLink.href = blobURL;
+      tempLink.setAttribute("download", filename);
+      if (typeof tempLink.download === "undefined") {
+        tempLink.setAttribute("target", "_blank");
+      }
+      document.body.appendChild(tempLink);
+      tempLink.click();
+      document.body.removeChild(tempLink);
+      setTimeout(() => {
+        // For Firefox it is necessary to delay revoking the ObjectURL
+        window.URL.revokeObjectURL(blobURL);
+      }, 100);
     },
     changeName() {
       this.socketInstance.emit("username", {
@@ -340,6 +453,8 @@ export default {
         }
 
         this.messages = res.messages;
+        this.files = res.files;
+        this.roomId = res._id;
       } catch (e) {
         console.log("Could not fetch messages:", e);
         this.$store.commit("alert", {
