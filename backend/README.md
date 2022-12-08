@@ -55,6 +55,7 @@ This renders the `index.html` file that will be used to interact with the backen
 
 - `message` _{string}_ - the content of the new message
 - `author` _{string}_ - the author of the message
+- `uid` _{string}_ - the userId of the author of the message
 
 **Returns**
 
@@ -144,10 +145,3 @@ This renders the `index.html` file that will be used to interact with the backen
 **Throws**
 
 - `404` if the `groupVibeId` is invalid
-
-
-
-
-
-
-

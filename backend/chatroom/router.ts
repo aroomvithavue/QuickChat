@@ -111,10 +111,12 @@ router.patch(
     if (editType === "message") {
       const message = req.body.message as string;
       const author = req.body.author as string;
+      const uid = req.body.uid as string;
       const chatRoom = await ChatRoomCollection.updateOne(
         req.params.chatRoomId,
         message,
-        author
+        author,
+        uid
       );
       const response = util.constructChatRoomResponse(chatRoom);
       res.status(200).json(response);
