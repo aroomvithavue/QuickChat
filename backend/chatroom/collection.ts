@@ -84,7 +84,8 @@ class ChatRoomCollection {
   static async updateOne(
     chatRoomId: Types.ObjectId | string,
     messageText: string,
-    messageAuthor: string
+    messageAuthor: string,
+    uid: string
   ): Promise<HydratedDocument<ChatRoom>> {
     const chatroom = await ChatRoomModel.findOne({ _id: chatRoomId });
     const messageDate = new Date();
@@ -92,6 +93,7 @@ class ChatRoomCollection {
       text: messageText,
       date: messageDate,
       author: messageAuthor,
+      uid,
     });
     await chatroom.save();
     return chatroom;
@@ -109,7 +111,8 @@ class ChatRoomCollection {
   static async updateOneByKeyword(
     chatKeyword: string,
     messageText: string,
-    messageAuthor: string
+    messageAuthor: string,
+    uid: string
   ): Promise<HydratedDocument<ChatRoom>> {
     const chatroom = await ChatRoomModel.findOne({ keyword: chatKeyword });
     const messageDate = new Date();
@@ -117,6 +120,7 @@ class ChatRoomCollection {
       text: messageText,
       date: messageDate,
       author: messageAuthor,
+      uid,
     });
     await chatroom.save();
     return chatroom;

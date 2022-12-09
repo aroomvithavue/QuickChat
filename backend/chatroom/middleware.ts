@@ -1,6 +1,7 @@
 import type { Request, Response, NextFunction } from "express";
 import { Types } from "mongoose";
 import ChatRoomCollection from "./collection";
+import { validate as uuidValidate, v4 as uuidv4 } from "uuid";
 
 /**
  * Checks if a chat room with keyword exists
@@ -99,6 +100,14 @@ const isValidEdit = async (req: Request, res: Response, next: NextFunction) => {
     if (!author.trim()) {
       res.status(400).json({
         error: "Author must be at least one character long.",
+      });
+      return;
+    }
+
+    const uid = req.body.uid as string;
+    if (!uuidValidate(uid)) {
+      res.status(400).json({
+        error: "Invalid userId",
       });
       return;
     }

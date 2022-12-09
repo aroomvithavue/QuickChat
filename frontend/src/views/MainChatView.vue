@@ -110,7 +110,7 @@
       >
         <div class="chat-start chat-end hidden"></div>
         <div
-          :class="`chat chat-${message.author === username ? 'end' : 'start'}`"
+          :class="`chat chat-${message.uid === uid ? 'end' : 'start'}`"
           v-for="message in messages"
           :key="message.id"
         >
@@ -119,7 +119,7 @@
           </div>
           <div
             :class="`chat-bubble ${
-              message.author === username ? 'chat-bubble-primary' : ''
+              message.uid === uid ? 'chat-bubble-primary' : ''
             }`"
           >
             {{ message.text }}
@@ -202,6 +202,7 @@
 <script>
 import ChatHeader from "@/components/Chat/ChatHeader.vue";
 import io from "socket.io-client";
+import { getUserId } from "@/util.js";
 
 export default {
   name: "MainChat",
@@ -209,6 +210,7 @@ export default {
   data() {
     return {
       username: "Anonymous",
+      uid: "",
       text: "",
       messages: [],
       rooms: ["apple"], // list of strings (room names)
@@ -224,6 +226,7 @@ export default {
     };
   },
   created() {
+    this.uid = getUserId();
     // determine correct backend url for dev versus production
     const isProd = process.env.NODE_ENV === "production";
     const url = isProd
@@ -290,6 +293,7 @@ export default {
         text: this.text,
         username: this.username,
         userId: this.socketInstance.id,
+        uid: this.uid,
         roomName: this.joinedRoom,
         author: this.username,
       };
