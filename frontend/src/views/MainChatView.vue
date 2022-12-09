@@ -1,5 +1,5 @@
 <template>
-  <main class="flex max-h-[95vh] my-0 w-screen">
+  <main class="flex max-h-[95vh] my-0 w-screen bg-base-100 text-base-content">
     <!-- Side Bar Code -->
     <div class="flex flex-col w-1/4 h-full min-h-[95vh] border-r-4">
       <div v-if="joinedRoom.length === 0">
@@ -18,9 +18,10 @@
               type="button"
               id="confused"
               @click="voteConfused"
-              class="mt-2 p-2 text-gray-500 rounded-lg cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600"
+              class="mt-2 p-2 text-gray-500 rounded-lg cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-bg-content dark:hover:text-white dark:hover:bg-gray-600"
             >
               <img
+                class="dark:invert"
                 :width="20 + Math.min(6 * this.confusedCount, 60)"
                 :height="20 + Math.min(6 * this.confusedCount, 60)"
                 src="https://img.icons8.com/ios-glyphs/80/null/question--v1.png"
@@ -31,9 +32,10 @@
               type="button"
               id="happy"
               @click="voteHappy"
-              class="mt-2 p-2 text-gray-500 rounded-lg cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600"
+              class="mt-2 p-2 text-gray-500 rounded-lg cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-bg-content dark:hover:text-white dark:hover:bg-gray-600"
             >
               <img
+                class="dark:invert"
                 :width="20 + Math.min(6 * this.happyCount, 60)"
                 :height="20 + Math.min(6 * this.happyCount, 60)"
                 src="https://img.icons8.com/material-outlined/80/null/smiling.png"
@@ -49,11 +51,11 @@
           rel="noopener noreferrer"
           target="_blank"
         >
-          <button class="btn mt-2 max-w-xs mt-10">Export Chat</button>
+          <button class="btn btn-info mt-2 max-w-xs mt-10">Export Chat</button>
         </router-link>
         <button
           v-if="joinedRoom.length !== 0"
-          class="btn mt-2 max-w-xs ml-2"
+          class="btn mt-2 max-w-xs ml-2 btn-info"
           @click="leaveRoom"
         >
           Leave this room
@@ -65,7 +67,7 @@
           name="username"
           v-model="username"
         />
-        <button class="btn mt-2 max-w-xs mt-10" @click="changeName">
+        <button class="btn mt-2 max-w-xs mt-10 btn-primary" @click="changeName">
           Change name
         </button>
       </footer>
@@ -127,7 +129,7 @@
         </div>
       </section>
       <footer
-        class="mt-auto py-4 border-t-4 flex flex-wrap -mb-px items-center justify-center"
+        class="mt-auto border-t-4 flex flex-wrap -mb-px items-center justify-center"
       >
         <label for="chat" class="sr-only">Your Message</label>
         <div
@@ -139,7 +141,7 @@
             @keypress="handleKeypress"
             name="message"
             v-model="text"
-            class="block mx-4 p-2.5 w-full text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            class="block resize-none mx-4 p-2.5 w-full text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             placeholder="Your message..."
           ></textarea>
           <button
@@ -160,7 +162,9 @@
             <span class="sr-only">Send message</span>
           </button>
           <label for="upload-modal" class="btn btn-ghost">
-            <img src="https://img.icons8.com/windows/32/null/file-upload.png"
+            <img
+              class="dark:invert"
+              src="https://img.icons8.com/windows/32/null/file-upload.png"
           /></label>
           <!-- Upload file modal -->
           <input type="checkbox" id="upload-modal" class="modal-toggle" />

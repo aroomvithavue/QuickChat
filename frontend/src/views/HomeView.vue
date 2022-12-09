@@ -2,24 +2,31 @@
   <main class="flex justify-evenly items-center h-[95vh] flex-wrap my-4">
     <div class="flex flex-row card w-96 bg-base-100 shadow-xl">
       <div class="card-body">
-        <h2 class="card-title">Create Chat</h2>
+        <h2 class="card-title text-base-content">Create Chat</h2>
         <form @submit="handleGenerate">
-          <select class="select select-bordered w-full max-w-xs my-4">
-            <option :value="JSON.stringify({ days: 0, hours: 2 })" selected>
-              2 hours
-            </option>
-            <option :value="JSON.stringify({ days: 0, hours: 5 })">
-              5 hours
-            </option>
-            <option :value="JSON.stringify({ days: 1, hours: 0 })">
-              1 day
-            </option>
-            <option :value="JSON.stringify({ days: 2, hours: 0 })">
-              2 days
-            </option>
-          </select>
+          <div class="form-controll w-full my-4 max-w-xs">
+            <label class="label"
+              ><span class="label-text">Expiration</span></label
+            >
+            <select
+              class="select select-bordered bg-base-100 text-base-content w-full max-w-xs"
+            >
+              <option :value="JSON.stringify({ days: 0, hours: 2 })" selected>
+                2 hours
+              </option>
+              <option :value="JSON.stringify({ days: 0, hours: 5 })">
+                5 hours
+              </option>
+              <option :value="JSON.stringify({ days: 1, hours: 0 })">
+                1 day
+              </option>
+              <option :value="JSON.stringify({ days: 2, hours: 0 })">
+                2 days
+              </option>
+            </select>
+          </div>
           <div class="card-actions justify-end">
-            <input type="submit" class="btn" value="Create" />
+            <input type="submit" class="btn btn-primary" value="Create" />
           </div>
         </form>
       </div>
@@ -27,15 +34,15 @@
 
     <div class="flex flex-row card w-96 bg-base-100 shadow-xl">
       <div class="card-body">
-        <h2 class="card-title">Join Chat</h2>
+        <h2 class="card-title text-base-content">Join Chat</h2>
         <form @submit="handleJoin">
           <input
             type="text"
             placeholder="Keyword"
-            class="input w-full max-w-xs my-4 input-bordered"
+            class="input w-full max-w-xs my-4 input-bordered bg-base-100 text-base-content"
           />
           <div class="card-actions justify-end">
-            <input type="submit" class="btn" value="Join" />
+            <input type="submit" class="btn btn-primary" value="Join" />
           </div>
         </form>
       </div>
