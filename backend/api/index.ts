@@ -223,7 +223,12 @@ io.on("connection", (socket) => {
     socket.to(data.roomName).emit("fileChange:received", data);
   });
 
-  socket.on("username", (data) => {
+  socket.on("username", async (data) => {
+    await ChatRoomCollection.updateAuthorInMessage(
+      data.chatroomKey,
+      data.newUsername,
+      data.uid
+    );
     socket.to(data.chatroomKey).emit("username:received", data);
   });
 
