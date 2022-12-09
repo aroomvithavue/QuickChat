@@ -266,15 +266,6 @@ export default {
       this.updateNameInMessages(data.uid, data.newUsername);
     });
 
-    // someone joined
-    this.socketInstance.on("join", (data) => {
-      this.messages = this.messages.concat(data);
-    });
-
-    // someone left
-    this.socketInstance.on("leave", (data) => {
-      this.messages = this.messages.concat(data);
-    });
     this.joinRoom(this.$route.params.keyword);
     this.$watch(
       () => this.$route.params,
