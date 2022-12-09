@@ -208,7 +208,7 @@
 <script>
 import ChatHeader from "@/components/Chat/ChatHeader.vue";
 import io from "socket.io-client";
-import { getUserId } from "@/util.js";
+import { getUserId, getUsername, setUsername } from "@/util.js";
 
 export default {
   name: "MainChat",
@@ -283,8 +283,7 @@ export default {
       }
     );
 
-    const randomId = Math.floor(Math.random() * 99999);
-    this.username = `Anonymous_${randomId}`;
+    this.username = getUsername();
   },
   updated() {
     //autoscroll to bottom of chat, if user is not scrolling up
@@ -392,7 +391,12 @@ export default {
         newUsername: newUsername,
       }); // send new name to others
 
+      setUsername(newUsername);
       this.updateNameInMessages(this.uid, newUsername);
+      this.$store.commit("alert", {
+        message: "Successfully updated username",
+        status: "success",
+      });
     },
     handleKeypress(e) {
       if (e.key === "Enter" && !e.shiftKey) {
