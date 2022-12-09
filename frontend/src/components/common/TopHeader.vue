@@ -4,6 +4,9 @@
       >QuickChat</router-link
     >
     <section class="absolute top-12 z-20 flex flex-col gap-1">
+      <!-- dummy div to avoid purging styles -->
+      <div class="hidden alert-error alert-success"></div>
+      <!-- dummy div to avoid purging styles -->
       <article
         v-for="(status, alert, index) in $store.state.alerts"
         :key="index"
