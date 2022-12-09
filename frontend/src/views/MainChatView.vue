@@ -61,15 +61,17 @@
           Leave this room
         </button>
 
-        <input
-          type="text"
-          class="input input-bordered w-full max-w-xs mt-10"
-          name="username"
-          v-model="username"
-        />
-        <button class="btn mt-2 max-w-xs mt-10 btn-primary" @click="changeName">
-          Change name
-        </button>
+        <form @submit="changeName">
+          <input
+            type="text"
+            class="input input-bordered w-full max-w-xs mt-10"
+            name="username"
+            :value="username"
+          />
+          <button class="btn mt-2 max-w-xs mt-10 btn-primary" type="submit">
+            Change name
+          </button>
+        </form>
       </footer>
     </div>
     <!-- Side Bar Code -->
@@ -261,7 +263,7 @@ export default {
 
     // reflect changed name
     this.socketInstance.on("username:received", (data) => {
-      this.updateNameInMessages(data.userId, data.newUsername);
+      this.updateNameInMessages(data.uid, data.newUsername);
     });
 
     // someone joined
@@ -380,13 +382,17 @@ export default {
         window.URL.revokeObjectURL(blobURL);
       }, 100);
     },
-    changeName() {
+    changeName(e) {
+      e.preventDefault();
+      const newUsername = e.target[0].value;
+      this.username = newUsername;
       this.socketInstance.emit("username", {
-        userId: this.socketInstance.id,
-        newUsername: this.username,
+        chatroomKey: this.joinedRoom,
+        uid: this.uid,
+        newUsername: newUsername,
       }); // send new name to others
 
-      this.updateNameInMessages(this.socketInstance.id, this.username); // change name in my chat
+      this.updateNameInMessages(this.uid, newUsername);
     },
     handleKeypress(e) {
       if (e.key === "Enter" && !e.shiftKey) {
@@ -394,12 +400,13 @@ export default {
         this.sendMessage();
       }
     },
-    updateNameInMessages(userId, newUsername) {
+    updateNameInMessages(uid, newUsername) {
       this.messages = this.messages.map((message) => {
-        if (message.userId === userId) {
+        if (message.uid === uid) {
           return {
             ...message,
             username: newUsername,
+            author: newUsername,
           };
         }
         return message;

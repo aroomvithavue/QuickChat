@@ -224,8 +224,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("username", (data) => {
-    users[data.userId] = data.newUsername;
-    socket.broadcast.emit("username:received", data);
+    socket.to(data.chatroomKey).emit("username:received", data);
   });
 
   socket.on("disconnect", () => {
