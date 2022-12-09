@@ -99,6 +99,27 @@ class ChatRoomCollection {
     return chatroom;
   }
 
+  static async updateAuthorInMessage(
+    keyword: string,
+    newUsername: string,
+    uid: string
+  ): Promise<HydratedDocument<ChatRoom>> {
+    const chatroom = await ChatRoomModel.findOne({ keyword });
+    chatroom.messages = chatroom.messages.map((message) => {
+      if (message.uid === uid) {
+        return {
+          ...message,
+          username: newUsername,
+          author: newUsername,
+        };
+      }
+      return message;
+    });
+
+    await chatroom.save();
+    return chatroom;
+  }
+
   /**
    * Update a chat by adding a new message. Differs from prior function in that it identifies
    * the chat by keyword, rather than by id.
