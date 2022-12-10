@@ -128,6 +128,16 @@
           >
             {{ message.text }}
           </div>
+          <div class="chat-footer text-xs opacity-50">
+            {{
+              new Date(message.date).toLocaleString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+                month: "short",
+                day: "2-digit",
+              })
+            }}
+          </div>
         </div>
       </section>
       <footer
