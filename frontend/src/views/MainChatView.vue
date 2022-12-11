@@ -261,6 +261,12 @@ export default {
       this.happyCount = data.happy;
     });
 
+    // receive updatedGroupVibeCounts
+    this.socketInstance.on("leftRoomGroupVibeUpdated", (data) => {
+      this.happyCount = data.happy;
+      this.confusedCount = data.confused;
+    });
+
     // receive confusedVote
     this.socketInstance.on("confusedVote:received", (data) => {
       this.confusedCount = data.confused;
@@ -508,6 +514,7 @@ export default {
     leaveRoom() {
       this.socketInstance.emit("leave-room", {
         roomName: this.joinedRoom,
+        uid: this.uid,
       });
       this.joinedRoom = "";
       this.$router.push("/");
