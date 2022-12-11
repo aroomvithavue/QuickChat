@@ -1,7 +1,7 @@
 <template>
   <div id="app" class="mx-auto max-h-screen">
     <header>
-      <TopHeader />
+      <TopHeader class="fixed" />
     </header>
     <router-view />
   </div>
