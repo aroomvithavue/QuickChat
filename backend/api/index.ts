@@ -188,7 +188,7 @@ io.on("connection", (socket) => {
     socket.join(data.roomName);
   });
 
-  socket.on("leave-room", (data) => {
+  socket.on("leave-room", async (data) => {
     await GroupVibeCollection.deleteAllByUser(data.roomName, localStorage.uid);
     socket.leave(data.roomName);
   });
