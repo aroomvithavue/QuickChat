@@ -198,7 +198,7 @@ io.on("connection", (socket) => {
     await ChatRoomCollection.updateOneByKeyword(
       data.roomName,
       data.text,
-      data.username,
+      data.author,
       data.uid
     );
     socket.to(data.roomName).emit("message:received", data);
