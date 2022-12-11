@@ -1,5 +1,4 @@
 <template>
-<<<<<<< HEAD
   <main>
     <div
       class="hero min-h-screen"
@@ -19,54 +18,6 @@
             <button class="btn btn-primary mt-5">Get Started</button>
           </a>
         </div>
-=======
-  <main class="flex justify-evenly items-center h-[95vh] flex-wrap my-4">
-    <div class="flex flex-row card w-96 bg-base-100 shadow-xl">
-      <div class="card-body">
-        <h2 class="card-title text-base-content">Create Chat</h2>
-        <form @submit="handleGenerate">
-          <div class="form-controll w-full my-4 max-w-xs">
-            <label class="label"
-              ><span class="label-text">Expiration</span></label
-            >
-            <select
-              class="select select-bordered bg-base-100 text-base-content w-full max-w-xs"
-            >
-              <option :value="JSON.stringify({ days: 0, hours: 2 })" selected>
-                2 hours
-              </option>
-              <option :value="JSON.stringify({ days: 0, hours: 5 })">
-                5 hours
-              </option>
-              <option :value="JSON.stringify({ days: 1, hours: 0 })">
-                1 day
-              </option>
-              <option :value="JSON.stringify({ days: 2, hours: 0 })">
-                2 days
-              </option>
-            </select>
-          </div>
-          <div class="form-control w-52 flex flex-row justify-start">
-            <label class="cursor-pointer label">
-              <span class="label-text">Password protected: </span>
-              <input
-                type="checkbox"
-                class="toggle toggle-success ml-2"
-                @click="handlePasswordToggle"
-              />
-            </label>
-          </div>
-          <input
-            v-if="showPassPrompt"
-            type="text"
-            placeholder="Password"
-            class="input w-full max-w-xs my-4 input-bordered bg-base-100 text-base-content"
-          />
-          <div class="card-actions justify-end">
-            <input type="submit" class="btn btn-primary" value="Create" />
-          </div>
-        </form>
->>>>>>> main
       </div>
     </div>
     <p id="joinCreateChat" class="mt-10 font-bold text-6xl">QuickChat</p>
@@ -111,6 +62,22 @@
                 </option>
               </select>
             </div>
+            <div class="form-control w-52 flex flex-row justify-start">
+              <label class="cursor-pointer label">
+                <span class="label-text">Password protected: </span>
+                <input
+                  type="checkbox"
+                  class="toggle toggle-success ml-2"
+                  @click="handlePasswordToggle"
+                />
+              </label>
+            </div>
+            <input
+              v-if="showPassPrompt"
+              type="text"
+              placeholder="Password"
+              class="input w-full max-w-xs my-4 input-bordered bg-base-100 text-base-content"
+            />
             <div class="card-actions justify-end">
               <input type="submit" class="btn btn-primary" value="Create" />
             </div>
