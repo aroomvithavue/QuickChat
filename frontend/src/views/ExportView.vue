@@ -20,6 +20,11 @@ import io from "socket.io-client";
 
 export default {
   name: "ExportView",
+  props: {
+    password: {
+      type: String,
+    },
+  },
   data() {
     return {
       messages: [],
@@ -38,7 +43,11 @@ export default {
     //   const url = `http://localhost:3000/api/chatRooms?keyword=${room}`;
 
     try {
-      const r = await fetch(url2);
+      const r = await fetch(url2, {
+        method: "GET",
+        headers: { chatPassword: this.password },
+        type: "application/json",
+      });
       // const r = await fetchFromApi(`/chatRooms?keyword=${room}`, "GET");
       const res = await r.json();
       if (!r.ok) {

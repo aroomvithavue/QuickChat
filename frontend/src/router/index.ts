@@ -29,6 +29,7 @@ const routes: Array<RouteConfig> = [
     path: "/:keyword/export",
     name: "export_view",
     component: ExportView,
+    props: (route) => ({ password: route.query.pass }),
   },
 ];
 
