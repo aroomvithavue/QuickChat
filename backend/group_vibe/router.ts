@@ -7,11 +7,11 @@ import * as groupVibeValidator from "./middleware";
 const router = express.Router();
 
 /**
- * Get happy and sad counts for a group vibe based on a chat room keyword.
+ * Get counts for a group vibe based on a chat room keyword.
  *
  * @name GET /api/groupVibes?keyword=key
  * 
- * @return {{happy: number, confused: number}} - happy and confused counts for the chat room with the given keyword
+ * @return {{happy: number, confused: number, sad: number, bored: number}} - counts for the chat room with the given keyword
  * @throws {400} - if keyword is not given
  * @throws {404} - if no chat room has given keyword
  *
@@ -40,10 +40,10 @@ router.get(
  * @param {string} keyword - the keyword of the chat room
  * @param {string} reaction - reaction
  * @param {string} user - user
- * @return {{happy: number, confused: number}} - the updated happy and confused counts
+ * @return {{happy: number, confused: number, sad: number, bored: number}} - the updated counts
  * @throws {400} - if keyword is not given
  * @throws {404} - if no chat room has given keyword
- * @throws {400} - if the reaction is not "happy" or "confused"
+ * @throws {400} - if the reaction is not "happy", "confused", "sad", or "bored"
  * @throws {400} - if the user is empty
  */
 router.patch(
@@ -52,10 +52,10 @@ router.patch(
   async (req: Request, res: Response) => {
 
     const keyword = req.body.keyword as string;
-    const reaction = req.body.reaction as "happy" | "confused";
+    const reaction = req.body.reaction as "happy" | "confused" | "sad" | "bored";
     const user = req.body.user as string;
 
-    let groupVibeCounts = {happy: 0, confused: 0}
+    let groupVibeCounts = {happy: 0, confused: 0, sad: 0, bored: 0}
     if (!req.body.reaction){
       groupVibeCounts = await GroupVibeCollection.deleteAllByUser(keyword, user);
     }
