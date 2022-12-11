@@ -188,7 +188,9 @@ io.on("connection", (socket) => {
     socket.join(data.roomName);
   });
 
-  socket.on("leave-room", (data) => {
+  socket.on("leave-room", async (data) => {
+    const totalCounts = await GroupVibeCollection.deleteAllByUser(data.roomName, data.uid);
+    socket.to(data.roomName).emit("leftRoomGroupVibeUpdated", totalCounts);
     socket.leave(data.roomName);
   });
 
@@ -206,7 +208,7 @@ io.on("connection", (socket) => {
     const totalCounts = await GroupVibeCollection.updateOne(
       data.chatroomKey,
       data.reaction,
-      data.user
+      data.uid
     );
     socket.to(data.chatroomKey).emit("confusedVote:received", totalCounts);
   });
@@ -215,7 +217,7 @@ io.on("connection", (socket) => {
     const totalCounts = await GroupVibeCollection.updateOne(
       data.chatroomKey,
       data.reaction,
-      data.user
+      data.uid
     );
     socket.to(data.chatroomKey).emit("happyVote:received", totalCounts);
   });

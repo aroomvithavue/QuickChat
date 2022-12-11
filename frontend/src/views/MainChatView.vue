@@ -284,6 +284,12 @@ export default {
       this.happyCount = data.happy;
     });
 
+    // receive updatedGroupVibeCounts
+    this.socketInstance.on("leftRoomGroupVibeUpdated", (data) => {
+      this.happyCount = data.happy;
+      this.confusedCount = data.confused;
+    });
+
     // receive confusedVote
     this.socketInstance.on("confusedVote:received", (data) => {
       this.confusedCount = data.confused;
@@ -442,7 +448,7 @@ export default {
       // Emit Confused Reaction
       const confusedVote = {
         reaction: "confused",
-        user: this.username,
+        uid: localStorage.uid,
         chatroomKey: this.joinedRoom,
       };
       this.socketInstance.emit("confusedVote", confusedVote); // send confused vote to others
@@ -458,7 +464,7 @@ export default {
       // Emit Happy Reaction
       const happyVote = {
         reaction: "happy",
-        user: this.username,
+        uid: localStorage.uid,
         chatroomKey: this.joinedRoom,
       };
       this.socketInstance.emit("happyVote", happyVote); // send happy vote to others
@@ -543,6 +549,7 @@ export default {
     leaveRoom() {
       this.socketInstance.emit("leave-room", {
         roomName: this.joinedRoom,
+        uid: this.uid,
       });
       this.joinedRoom = "";
       this.$router.push("/");
