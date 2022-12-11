@@ -468,7 +468,11 @@ export default {
         `api/groupVibes?keyword=${this.joinedRoom}`;
 
       try {
-        const r = await fetch(url);
+        const r = await fetch(url, {
+          method: "GET",
+          headers: { chatPassword: "" },
+          type: "application/json",
+        });
         // const r = await fetchFromApi(`/chatRooms?keyword=${room}`, "GET");
         const res = await r.json();
         if (!r.ok) {
