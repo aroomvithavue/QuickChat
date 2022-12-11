@@ -337,10 +337,8 @@ export default {
     // send message
     sendMessage() {
       const message = {
-        id: new Date().getTime(),
+        date: new Date().getTime(),
         text: this.text,
-        username: this.username,
-        userId: this.socketInstance.id,
         uid: this.uid,
         roomName: this.joinedRoom,
         author: this.username,
@@ -542,7 +540,11 @@ export default {
         `api/groupVibes?keyword=${this.joinedRoom}`;
 
       try {
-        const r = await fetch(url);
+        const r = await fetch(url, {
+          method: "GET",
+          headers: { chatPassword: "" },
+          type: "application/json",
+        });
         // const r = await fetchFromApi(`/chatRooms?keyword=${room}`, "GET");
         const res = await r.json();
         if (!r.ok) {

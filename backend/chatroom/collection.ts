@@ -9,11 +9,13 @@ class ChatRoomCollection {
    *
    * @param days days until chat expires
    * @param hours until chat expires
+   * @param chatPassword password for entry into chat
    * @returns {Promise<HydratedDocument<ChatRoom>>} - the newly created chat room
    */
   static async addOne(
     days: string,
-    hours: string
+    hours: string,
+    chatPassword: string
   ): Promise<HydratedDocument<ChatRoom>> {
     const date = new Date();
     const date2 = new Date();
@@ -32,6 +34,7 @@ class ChatRoomCollection {
       keyword,
       dateCreated: date,
       expireAt: date2,
+      password: chatPassword,
       messages: [],
       files: [],
     });

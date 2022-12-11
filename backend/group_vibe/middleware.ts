@@ -48,7 +48,8 @@ const doesGroupVibeExist = async (req: Request, res: Response, next: NextFunctio
  */
 const isValidReaction = async (req: Request,res: Response,next: NextFunction) => {
     const reaction = req.body.reaction as string;
-    if (reaction !== "happy" && reaction !== "confused") {
+
+    if (reaction && reaction !== "happy" && reaction !== "confused") {
       res.status(400).json({
         error: "Reaction must be either happy or confused.",
       });
