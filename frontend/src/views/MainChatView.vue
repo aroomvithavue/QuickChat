@@ -91,7 +91,6 @@
       <!-- FilesTab Code -->
       <section
         id="filesContainer"
-        @scroll="handleScroll"
         v-if="inFilesTabView"
         class="overflow-y-auto"
       >
@@ -290,16 +289,15 @@ export default {
   updated() {
     //autoscroll to bottom of chat, if user is not scrolling up
     const container = this.$el.querySelector("#messageContainer");
-    if (!this.scrolling) container.scrollTop = container.scrollHeight;
+    if (container && !this.scrolling)
+      container.scrollTop = container.scrollHeight;
   },
   methods: {
     // send message
     sendMessage() {
       const message = {
-        id: new Date().getTime(),
+        date: new Date().getTime(),
         text: this.text,
-        username: this.username,
-        userId: this.socketInstance.id,
         uid: this.uid,
         roomName: this.joinedRoom,
         author: this.username,
@@ -469,7 +467,11 @@ export default {
         `api/groupVibes?keyword=${this.joinedRoom}`;
 
       try {
-        const r = await fetch(url);
+        const r = await fetch(url, {
+          method: "GET",
+          headers: { chatPassword: "" },
+          type: "application/json",
+        });
         // const r = await fetchFromApi(`/chatRooms?keyword=${room}`, "GET");
         const res = await r.json();
         if (!r.ok) {

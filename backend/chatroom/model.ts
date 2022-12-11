@@ -6,6 +6,7 @@ export type ChatRoom = {
   keyword: string;
   dateCreated: Date;
   expireAt: Date;
+  password: String;
   messages: Array<{ text: string; date: Date; author: string; uid: string }>;
   files: Array<{ fileId: string; filename: string; date: Date }>;
 };
@@ -24,6 +25,10 @@ const ChatRoomSchema = new Schema<ChatRoom>({
     expires: 0,
     index: true,
     required: true,
+  },
+  password: {
+    type: String,
+    required: false,
   },
   messages: [
     {
