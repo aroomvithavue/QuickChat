@@ -12,7 +12,8 @@
           <p>{{ joinedRoom }}</p>
         </div>
         <div class="mt-10">
-          <h1 class="font-bold">Group Vibe</h1>
+          <h1 class="font-bold">Live Group Vibe</h1>
+          <p class="mt-2">How are you feeling right now?</p>
           <div class="flex flex-col justify-center content-center items-center">
             <button
               type="button"
@@ -194,10 +195,7 @@
                   name="file"
                   class="file-input file-input-bordered file-input-primary w-full max-w-s"
                 />
-                <p>
-                  Accepted File Types: jpg, txt, gif, pdf, png, tiff, or bmp
-                  under 2MB
-                </p>
+                <p>Accepted File Types: jpg, jpeg, txt, gif, pdf, png, svg</p>
                 <button
                   type="submit"
                   class="btn btn-primary max-w-xs w-24 self-end"
