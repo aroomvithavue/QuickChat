@@ -50,11 +50,18 @@ router.patch(
   "/",
   [groupVibeValidator.doesChatWithKeyExist("body"), groupVibeValidator.isValidReaction],
   async (req: Request, res: Response) => {
+
     const keyword = req.body.keyword as string;
     const reaction = req.body.reaction as "happy" | "confused";
     const user = req.body.user as string;
-    
-    const groupVibeCounts = await GroupVibeCollection.updateOne(keyword, reaction, user);
+
+    let groupVibeCounts = {happy: 0, confused: 0}
+    if (!req.body.reaction){
+      groupVibeCounts = await GroupVibeCollection.deleteAllByUser(keyword, user);
+    }
+    else{
+      groupVibeCounts = await GroupVibeCollection.updateOne(keyword, reaction, user);
+    }
     res.status(200).json(groupVibeCounts);
   }
 );
