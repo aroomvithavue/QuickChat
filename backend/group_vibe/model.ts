@@ -7,6 +7,8 @@ export type GroupVibe = {
   chatroomId: Types.ObjectId;
   happy: Array<String>;
   confused: Array<String>;
+  sad: Array<String>;
+  bored: Array<String>;
 };
 
 export type PopulatedGroupVibe = {
@@ -14,6 +16,8 @@ export type PopulatedGroupVibe = {
   chatroomId: ChatRoom;
   happy: Array<String>;
   confused: Array<String>;
+  sad: Array<String>;
+  bored: Array<String>;
 };
 
 const GroupVibeSchema = new Schema<GroupVibe>({
@@ -27,6 +31,14 @@ const GroupVibeSchema = new Schema<GroupVibe>({
     required: false
   }],
   confused: [{
+    type: String,
+    required: false
+  }],
+  sad: [{
+    type: String,
+    required: false
+  }],
+  bored: [{
     type: String,
     required: false
   }]
