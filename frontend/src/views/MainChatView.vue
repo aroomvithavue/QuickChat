@@ -320,6 +320,8 @@ export default {
     this.socketInstance.on("leftRoomGroupVibeUpdated", (data) => {
       this.happyCount = data.happy;
       this.confusedCount = data.confused;
+      this.sadCount = data.sad;
+      this.boredCount = data.bored;
     });
 
     // receive confusedVote
@@ -614,10 +616,14 @@ export default {
 
         this.happyCount = res.happy;
         this.confusedCount = res.confused;
+        this.sadCount = res.sad;
+        this.boredCount = res.bored;
       } catch (e) {
         console.log("Could not fetch counts for group vibe:", e);
         this.happyCount = 0;
         this.confusedCount = 0;
+        this.sadCount = 0;
+        this.boredCount = 0;
       }
     },
     leaveRoom() {
