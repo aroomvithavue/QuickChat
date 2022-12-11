@@ -1,7 +1,7 @@
 <template>
-  <main>
+  <main class="bg-base-100 text-base-content">
     <!-- Header Code -->
-    <header class="btn btn-ghost normal-case text-xl">
+    <header class="normal-case text-xl">
       Use your browser to print or save this view.
     </header>
 
