@@ -12,7 +12,8 @@
           <p>{{ joinedRoom }}</p>
         </div>
         <div class="mt-10">
-          <h1 class="font-bold">Group Vibe</h1>
+          <h1 class="font-bold">Live Group Vibe</h1>
+          <p class="mt-2">How are you feeling right now?</p>
           <div class="flex flex-col justify-center content-center items-center">
             <button
               type="button"
@@ -187,19 +188,19 @@
                 >✕</label
               >
               <form @submit="handleFileUpload" class="flex flex-col gap-4">
-                <h3 class="text-xl font-semibold">Upload file to chat</h3>
+                <h3 class="text-xl font-semibold">Upload File To Chat</h3>
                 <input
                   type="file"
                   name="file"
                   class="file-input file-input-bordered file-input-primary w-full max-w-s"
                 />
-
+                <p>Accepted File Types: jpg, jpeg, txt, gif, pdf, png, svg</p>
                 <button
                   type="submit"
                   class="btn btn-primary max-w-xs w-24 self-end"
                 >
                   <label for="upload-modal" class="btn btn-ghost max-w-xs w-24"
-                    >Submit</label
+                    >Upload</label
                   >
                 </button>
               </form>

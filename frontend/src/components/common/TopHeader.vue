@@ -1,8 +1,14 @@
 <template>
   <div class="navbar bg-base-300 h-[5vh] my-0">
     <router-link to="/" class="btn btn-ghost normal-case text-xl text-primary"
-      >QuickChat</router-link
-    >
+      ><img
+        class="max-w-full h-auto rounded-lg w-30 h-30"
+        width="50"
+        height="60"
+        alt="QuickChat"
+        src="../../assets/logo.png"
+      />
+    </router-link>
     <section class="absolute top-12 z-20 flex flex-col gap-1">
       <!-- dummy div to avoid purging styles -->
       <div class="hidden alert-error alert-success"></div>
