@@ -1,4 +1,5 @@
 <template>
+<<<<<<< HEAD
   <main>
     <div
       class="hero min-h-screen"
@@ -18,6 +19,54 @@
             <button class="btn btn-primary mt-5">Get Started</button>
           </a>
         </div>
+=======
+  <main class="flex justify-evenly items-center h-[95vh] flex-wrap my-4">
+    <div class="flex flex-row card w-96 bg-base-100 shadow-xl">
+      <div class="card-body">
+        <h2 class="card-title text-base-content">Create Chat</h2>
+        <form @submit="handleGenerate">
+          <div class="form-controll w-full my-4 max-w-xs">
+            <label class="label"
+              ><span class="label-text">Expiration</span></label
+            >
+            <select
+              class="select select-bordered bg-base-100 text-base-content w-full max-w-xs"
+            >
+              <option :value="JSON.stringify({ days: 0, hours: 2 })" selected>
+                2 hours
+              </option>
+              <option :value="JSON.stringify({ days: 0, hours: 5 })">
+                5 hours
+              </option>
+              <option :value="JSON.stringify({ days: 1, hours: 0 })">
+                1 day
+              </option>
+              <option :value="JSON.stringify({ days: 2, hours: 0 })">
+                2 days
+              </option>
+            </select>
+          </div>
+          <div class="form-control w-52 flex flex-row justify-start">
+            <label class="cursor-pointer label">
+              <span class="label-text">Password protected: </span>
+              <input
+                type="checkbox"
+                class="toggle toggle-success ml-2"
+                @click="handlePasswordToggle"
+              />
+            </label>
+          </div>
+          <input
+            v-if="showPassPrompt"
+            type="text"
+            placeholder="Password"
+            class="input w-full max-w-xs my-4 input-bordered bg-base-100 text-base-content"
+          />
+          <div class="card-actions justify-end">
+            <input type="submit" class="btn btn-primary" value="Create" />
+          </div>
+        </form>
+>>>>>>> main
       </div>
     </div>
     <p id="joinCreateChat" class="mt-10 font-bold text-6xl">QuickChat</p>
@@ -90,7 +139,15 @@
 <script>
 export default {
   name: "HomeView",
+  data() {
+    return {
+      showPassPrompt: false,
+    };
+  },
   methods: {
+    handlePasswordToggle(e) {
+      this.showPassPrompt = e.target.checked;
+    },
     handleJoin(e) {
       e.preventDefault();
       const keyword = e.target[0].value;
@@ -114,12 +171,18 @@ export default {
         (isProd
           ? "https://quickchat-api-61040.herokuapp.com/"
           : "http://localhost:3000/") + `api/chatRooms`;
+      const body = JSON.parse(e.target[0].value);
+      body.password = this.showPassPrompt ? e.target[2].value : "";
 
       const res = fetch(url, {
         method: "POST",
-        body: e.target[0].value,
+        body: JSON.stringify(body),
         headers: { "Content-Type": "application/json" },
       });
+      this.$store.commit(
+        "setPassword",
+        this.showPassPrompt ? e.target[2].value : ""
+      );
       const keyword = (await (await res).json()).keyword;
       this.$router.push({ name: "chat", params: { keyword } });
     },

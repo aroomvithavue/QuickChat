@@ -6,6 +6,7 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     alerts: {},
+    password: "",
   },
   getters: {},
   mutations: {
@@ -14,6 +15,9 @@ export default new Vuex.Store({
       setTimeout(() => {
         Vue.delete(state.alerts, payload.message);
       }, 3000);
+    },
+    setPassword(state, payload) {
+      state.password = payload;
     },
   },
   actions: {},
