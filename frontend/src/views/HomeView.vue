@@ -8,6 +8,7 @@
       <div class="hero-content text-center text-neutral-content">
         <div class="max-w-md">
           <h1 class="mb-5 text-5xl font-bold">Hello there.</h1>
+          <img src="../assets/logo.png" />
           <p class="mb-5">
             QuickChat Is Your One-Stop Shop for Quick Messaging For Your Next
             Team, Project, Lecture, and More.
