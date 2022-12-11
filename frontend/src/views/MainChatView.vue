@@ -211,6 +211,28 @@
 
       <!-- Chat Code -->
     </div>
+    <!-- Password modal  -->
+    <div
+      class="absolute w-screen h-screen bg-base-100 flex justify-center items-center"
+      v-if="showPassModal"
+    >
+      <div class="flex flex-row card w-96 bg-base-100 shadow-xl">
+        <div class="card-body">
+          <h2 class="card-title text-base-content">Chat Password Required</h2>
+          <form @submit="handleInputPassword">
+            <input
+              type="text"
+              placeholder="Password"
+              class="input w-full max-w-xs my-4 input-bordered bg-base-100 text-base-content"
+            />
+            <div class="card-actions justify-end">
+              <input type="submit" class="btn btn-primary" value="Join" />
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <!-- Password modal  -->
   </main>
 </template>
 
@@ -238,6 +260,7 @@ export default {
       inFilesTabView: false,
       files: [],
       roomId: "",
+      showPassModal: false,
     };
   },
   created() {
@@ -468,13 +491,25 @@ export default {
       try {
         const r = await fetch(url, {
           method: "GET",
-          headers: { chatPassword: "" },
+          headers: { chatPassword: this.$store.state.password },
           type: "application/json",
         });
         // const r = await fetchFromApi(`/chatRooms?keyword=${room}`, "GET");
         const res = await r.json();
         if (!r.ok) {
-          throw new Error(res.error);
+          if (r.status === 401) {
+            if (this.showPassModal) {
+              this.$store.commit("alert", {
+                message: "Wrong password",
+                status: "error",
+              });
+            }
+            this.showPassModal = true;
+          } else {
+            throw new Error(res.error);
+          }
+        } else {
+          this.showPassModal = false;
         }
 
         this.messages = res.messages;
@@ -483,7 +518,7 @@ export default {
       } catch (e) {
         console.log("Could not fetch messages:", e);
         this.$store.commit("alert", {
-          message: `Chat "${this.joinedRoom}" not found`,
+          message: e,
           status: "error",
         });
         this.$router.push({ name: "home" });
@@ -520,6 +555,11 @@ export default {
       } else {
         this.scrolling = true;
       }
+    },
+    handleInputPassword(e) {
+      e.preventDefault();
+      this.$store.commit("setPassword", e.target[0].value);
+      this.joinRoom(this.joinedRoom);
     },
     changeToChat() {
       this.inFilesTabView = false;
