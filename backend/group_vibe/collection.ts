@@ -15,7 +15,9 @@ class GroupVibeCollection {
     const groupVibe = new GroupVibeModel({
         chatroomId: chatroom, 
         happy: [], 
-        confused: []
+        confused: [],
+        sad: [],
+        bored: []
     });
     
     await groupVibe.save();
@@ -36,13 +38,17 @@ class GroupVibeCollection {
    * Find group vibe counts by id.
    *
    * @param groupVibeId id of group vibe to find
-   * @returns {Promise<{happy: number, confused: number}>} - the group vibe counts with the given id
+   * @returns {Promise<{happy: number, confused: number, sad: number, bored: number}>} - the group vibe counts with the given id
    */
-   static async findOneCounts(groupVibeId: Types.ObjectId | string): Promise<{happy: number, confused: number}> {
+   static async findOneCounts(groupVibeId: Types.ObjectId | string): Promise<{happy: number, confused: number, sad: number, bored: number}> {
     const groupVibe = await GroupVibeModel.findOne({ _id: groupVibeId });
+    
     const happyCount = groupVibe.happy.length;
     const confusedCount = groupVibe.confused.length;
-    return {happy: happyCount, confused: confusedCount};
+    const sadCount = groupVibe.sad.length;
+    const boredCount = groupVibe.bored.length;
+    
+    return {happy: happyCount, confused: confusedCount, sad: sadCount, bored: boredCount};
   }
 
   /**
@@ -60,11 +66,11 @@ class GroupVibeCollection {
    *
    * @param {string} groupVibeId - id of group vibe
    * @param {string} user - string
-   * @param {string} reaction - "happy" | "confused"
+   * @param {string} reaction - "happy" | "confused" | "sad" | "bored"
    *
    * @return {Promise<boolean>}
    */
-  static async findReactionByUser(groupVibeId: Types.ObjectId | string, user: string, reaction: "happy" | "confused"): Promise<boolean> {
+  static async findReactionByUser(groupVibeId: Types.ObjectId | string, user: string, reaction: "happy" | "confused" | "sad" | "bored"): Promise<boolean> {
     
     const groupVibe = await GroupVibeModel.findOne({ _id: groupVibeId });
 
@@ -81,6 +87,18 @@ class GroupVibeCollection {
                 return true;
             }
         }
+        else if (reaction === "sad"){
+            const sadArr = groupVibe.sad;
+            if (sadArr.includes(user)){
+                return true;
+            }
+        }
+        else if (reaction === "bored"){
+            const boredArr = groupVibe.bored;
+            if (boredArr.includes(user)){
+                return true;
+            }
+        }
     }
 
     return false;
@@ -94,7 +112,7 @@ class GroupVibeCollection {
    * @param user - user
    * @returns {Promise<HydratedDocument<GroupVibe>>} - the newly updated group vibe
    */
-   static async updateOneAdd(groupVibeId: Types.ObjectId | string, reaction: "happy" | "confused", user: string): Promise<HydratedDocument<GroupVibe>> {
+   static async updateOneAdd(groupVibeId: Types.ObjectId | string, reaction: "happy" | "confused" | "sad" | "bored", user: string): Promise<HydratedDocument<GroupVibe>> {
     
     const groupVibe = await GroupVibeModel.findOne({ _id: groupVibeId });
 
@@ -103,6 +121,12 @@ class GroupVibeCollection {
     }
     else if (reaction === "confused"){
         groupVibe.confused.push(user);
+    }
+    else if (reaction === "sad"){
+        groupVibe.sad.push(user);
+    }
+    else if (reaction === "bored"){
+        groupVibe.bored.push(user);
     }
     
     await groupVibe.save();
@@ -118,7 +142,7 @@ class GroupVibeCollection {
    * @param user - user
    * @returns {Promise<HydratedDocument<GroupVibe>>} - the newly updated group vibe
    */
-   static async updateOneDelete(groupVibeId: Types.ObjectId | string, reaction: "happy" | "confused", user: string): Promise<HydratedDocument<GroupVibe>> {
+   static async updateOneDelete(groupVibeId: Types.ObjectId | string, reaction: "happy" | "confused" | "sad" | "bored", user: string): Promise<HydratedDocument<GroupVibe>> {
     
     const groupVibe = await GroupVibeModel.findOne({ _id: groupVibeId });
 
@@ -138,6 +162,22 @@ class GroupVibeCollection {
             }
         }
     }
+    else if (reaction === "sad"){
+        for(let i = 0; i < groupVibe.sad.length; i++){                     
+            if (groupVibe.sad[i] === user) { 
+                groupVibe.sad.splice(i, 1); 
+                i--; 
+            }
+        }
+    }
+    else if (reaction === "bored"){
+        for(let i = 0; i < groupVibe.bored.length; i++){                     
+            if (groupVibe.bored[i] === user) { 
+                groupVibe.bored.splice(i, 1); 
+                i--; 
+            }
+        }
+    }
     
     await groupVibe.save();
     return groupVibe;
@@ -149,9 +189,9 @@ class GroupVibeCollection {
    * @param chatroomKey - keyword that corresponds to chat room
    * @param reaction - reaction
    * @param uid - user id
-   * @returns {Promise<{happy: number, confused: number}} - the newly updated group vibe counts
+   * @returns {Promise<{happy: number, confused: number, sad: number, bored: number}} - the newly updated group vibe counts
    */
-   static async updateOne(chatroomKey: string, reaction: "happy" | "confused", uid: string): Promise<{happy: number, confused: number}> {
+   static async updateOne(chatroomKey: string, reaction: "happy" | "confused" | "sad" | "bored", uid: string): Promise<{happy: number, confused: number, sad: number, bored: number}> {
 
     const chatroom = await ChatRoomCollection.findByKeyword(chatroomKey);
     let groupVibe = await GroupVibeModel.findOne({ chatroomId: chatroom._id });
@@ -173,7 +213,9 @@ class GroupVibeCollection {
 
     const happyCount = groupVibe.happy.length;
     const confusedCount = groupVibe.confused.length;
-    return {happy: happyCount, confused: confusedCount};
+    const sadCount = groupVibe.sad.length;
+    const boredCount = groupVibe.bored.length;
+    return {happy: happyCount, confused: confusedCount, sad: sadCount, bored: boredCount};
   }
 
   /**
@@ -181,9 +223,9 @@ class GroupVibeCollection {
    *
    * @param chatroomKey - keyword that corresponds to chat room
    * @param uid - user id
-   * @returns {Promise<{happy: number, confused: number}>} - the newly updated group vibe counts
+   * @returns {Promise<{happy: number, confused: number, sad: number, bored: number}>} - the newly updated group vibe counts
    */
-   static async deleteAllByUser(chatroomKey: string, uid: string): Promise<{happy: number, confused: number}> {
+   static async deleteAllByUser(chatroomKey: string, uid: string): Promise<{happy: number, confused: number, sad: number, bored: number}> {
     
     const chatroom = await ChatRoomCollection.findByKeyword(chatroomKey);
     let groupVibe = await GroupVibeModel.findOne({ chatroomId: chatroom._id });
@@ -204,12 +246,26 @@ class GroupVibeCollection {
             i--; 
         }
     }
+    for(let i = 0; i < groupVibe.sad.length; i++){                     
+        if (groupVibe.sad[i] === uid) { 
+            groupVibe.sad.splice(i, 1); 
+            i--; 
+        }
+    }
+    for(let i = 0; i < groupVibe.bored.length; i++){                     
+        if (groupVibe.bored[i] === uid) { 
+            groupVibe.bored.splice(i, 1); 
+            i--; 
+        }
+    }
     
     await groupVibe.save();
     
     const happyCount = groupVibe.happy.length;
     const confusedCount = groupVibe.confused.length;
-    return {happy: happyCount, confused: confusedCount};
+    const sadCount = groupVibe.sad.length;
+    const boredCount = groupVibe.bored.length;
+    return {happy: happyCount, confused: confusedCount, sad: sadCount, bored: boredCount};
   }
 
   /**
