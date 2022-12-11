@@ -11,10 +11,7 @@ const doesChatRoomWithKeyExist = async (
   res: Response,
   next: NextFunction
 ) => {
-
-  const keywordPassword = req.query.keywordPassword as string;
-  const colonIndex = keywordPassword.indexOf(":");
-  const keyword = keywordPassword.slice(0, colonIndex);
+  const keyword = req.query.keyword as string;
 
   const chatRoom = await ChatRoomCollection.findByKeyword(keyword);
   if (!chatRoom) {
@@ -87,14 +84,19 @@ const isValidChatRoom = async (
 /**
  * Checks if the password is correct.
  */
- const isCorrectPassword = async (req: Request, res: Response,next: NextFunction) => {
-  
-  const predPassword = req.body.password ? req.body.password as string : '';
-  
+const isCorrectPassword = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const predPassword = req.get("chatPassword")
+    ? (req.get("chatPassword") as string)
+    : "";
+
   const chatRoom = await ChatRoomCollection.findOne(req.params.chatRoomId);
   const truePassword = chatRoom.password;
 
-  if (predPassword !== truePassword){
+  if (predPassword !== truePassword) {
     res.status(404).json({
       error: "Password input does not match chat room password.",
     });
@@ -107,18 +109,19 @@ const isValidChatRoom = async (
 /**
  * Checks if the password is correct for chat room with given keyword.
  */
- const isCorrectPasswordByKeyword = async (req: Request, res: Response,next: NextFunction) => {
-
-  const keywordPassword = req.query.keywordPassword as string;
-  const colonIndex = keywordPassword.indexOf(":");
-  const keyword = keywordPassword.slice(0, colonIndex);
-  const predPassword = keywordPassword.slice(colonIndex+1);
+const isCorrectPasswordByKeyword = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const keyword = req.query.keyword as string;
+  const predPassword = req.get("chatPassword") as string;
 
   const chatRoom = await ChatRoomCollection.findByKeyword(keyword);
   const truePassword = chatRoom.password;
 
-  if (predPassword !== truePassword){
-    res.status(404).json({
+  if (predPassword !== truePassword) {
+    res.status(401).json({
       error: "Password input does not match chat room password.",
     });
     return;
