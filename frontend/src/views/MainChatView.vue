@@ -302,6 +302,13 @@ export default {
       showPassModal: false,
     };
   },
+  beforeRouteLeave(to, from, next) {
+    this.socketInstance.emit("leave-room", {
+      roomName: this.joinedRoom,
+      uid: this.uid,
+    });
+    next();
+  },
   created() {
     this.uid = getUserId();
     // determine correct backend url for dev versus production
@@ -499,7 +506,7 @@ export default {
       // Emit Confused Reaction
       const confusedVote = {
         reaction: "confused",
-        uid: localStorage.uid,
+        uid: getUserId(),
         chatroomKey: this.joinedRoom,
       };
       this.socketInstance.emit("confusedVote", confusedVote); // send confused vote to others
@@ -515,7 +522,7 @@ export default {
       // Emit Happy Reaction
       const happyVote = {
         reaction: "happy",
-        uid: localStorage.uid,
+        uid: getUserId(),
         chatroomKey: this.joinedRoom,
       };
       this.socketInstance.emit("happyVote", happyVote); // send happy vote to others
@@ -531,7 +538,7 @@ export default {
       // Emit Sad Reaction
       const sadVote = {
         reaction: "sad",
-        uid: localStorage.uid,
+        uid: getUserId(),
         chatroomKey: this.joinedRoom,
       };
       this.socketInstance.emit("sadVote", sadVote); // send sad vote to others
@@ -547,7 +554,7 @@ export default {
       // Emit Bored Reaction
       const boredVote = {
         reaction: "bored",
-        uid: localStorage.uid,
+        uid: getUserId(),
         chatroomKey: this.joinedRoom,
       };
       this.socketInstance.emit("boredVote", boredVote); // send bored vote to others
@@ -634,11 +641,6 @@ export default {
       }
     },
     leaveRoom() {
-      this.socketInstance.emit("leave-room", {
-        roomName: this.joinedRoom,
-        uid: this.uid,
-      });
-      this.joinedRoom = "";
       this.$router.push("/");
     },
     handleScroll(e) {
