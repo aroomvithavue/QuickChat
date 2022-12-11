@@ -189,7 +189,10 @@ io.on("connection", (socket) => {
   });
 
   socket.on("leave-room", async (data) => {
-    const totalCounts = await GroupVibeCollection.deleteAllByUser(data.roomName, data.uid);
+    const totalCounts = await GroupVibeCollection.deleteAllByUser(
+      data.roomName,
+      data.uid
+    );
     socket.to(data.roomName).emit("leftRoomGroupVibeUpdated", totalCounts);
     socket.leave(data.roomName);
   });
@@ -198,7 +201,7 @@ io.on("connection", (socket) => {
     await ChatRoomCollection.updateOneByKeyword(
       data.roomName,
       data.text,
-      data.username,
+      data.author,
       data.uid
     );
     socket.to(data.roomName).emit("message:received", data);
