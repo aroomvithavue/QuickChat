@@ -48,7 +48,11 @@
       </div>
       <footer v-if="joinedRoom.length !== 0" class="mt-auto py-10">
         <router-link
-          :to="{ name: 'export_view', params: { keyword: joinedRoom } }"
+          :to="{
+            name: 'export_view',
+            params: { keyword: joinedRoom },
+            query: { pass: $store.state.password },
+          }"
           rel="noopener noreferrer"
           target="_blank"
         >
