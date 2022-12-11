@@ -224,6 +224,24 @@ io.on("connection", (socket) => {
     );
     socket.to(data.chatroomKey).emit("happyVote:received", totalCounts);
   });
+
+  socket.on("sadVote", async (data) => {
+    const totalCounts = await GroupVibeCollection.updateOne(
+      data.chatroomKey,
+      data.reaction,
+      data.uid
+    );
+    socket.to(data.chatroomKey).emit("sadVote:received", totalCounts);
+  });
+
+  socket.on("boredVote", async (data) => {
+    const totalCounts = await GroupVibeCollection.updateOne(
+      data.chatroomKey,
+      data.reaction,
+      data.uid
+    );
+    socket.to(data.chatroomKey).emit("boredVote:received", totalCounts);
+  });
   socket.on("fileChange", async (data) => {
     socket.to(data.roomName).emit("fileChange:received", data);
   });

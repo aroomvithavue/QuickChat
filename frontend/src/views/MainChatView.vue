@@ -43,6 +43,34 @@
               />
               <p v-if="this.happyCount !== 0">{{ this.happyCount }}</p>
             </button>
+            <button
+              type="button"
+              id="bored"
+              @click="voteBored"
+              class="mt-2 p-2 text-gray-500 rounded-lg cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-bg-content dark:hover:text-white dark:hover:bg-gray-600"
+            >
+              <img
+                class="dark:invert"
+                :width="20 + Math.min(6 * this.boredCount, 60)"
+                :height="20 + Math.min(6 * this.boredCount, 60)"
+                src="https://img.icons8.com/windows/80/null/bored.png"
+              />
+              <p v-if="this.boredCount !== 0">{{ this.boredCount }}</p>
+            </button>
+            <button
+              type="button"
+              id="sad"
+              @click="voteSad"
+              class="mt-2 p-2 text-gray-500 rounded-lg cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-bg-content dark:hover:text-white dark:hover:bg-gray-600"
+            >
+              <img
+                class="dark:invert"
+                :width="20 + Math.min(6 * this.sadCount, 60)"
+                :height="20 + Math.min(6 * this.sadCount, 60)"
+                src="https://img.icons8.com/ios-glyphs/80/null/crying--v1.png"
+              />
+              <p v-if="this.sadCount !== 0">{{ this.sadCount }}</p>
+            </button>
           </div>
         </div>
       </div>
@@ -260,8 +288,12 @@ export default {
       scrolling: false,
       confusedCount: 0,
       happyCount: 0,
+      sadCount: 0,
+      boredCount: 0,
       userVotedConfused: false,
       userVotedHappy: false,
+      userVotedSad: false,
+      userVotedBored: false,
       inFilesTabView: false,
       files: [],
       roomId: "",
@@ -293,11 +325,23 @@ export default {
     this.socketInstance.on("leftRoomGroupVibeUpdated", (data) => {
       this.happyCount = data.happy;
       this.confusedCount = data.confused;
+      this.sadCount = data.sad;
+      this.boredCount = data.bored;
     });
 
     // receive confusedVote
     this.socketInstance.on("confusedVote:received", (data) => {
       this.confusedCount = data.confused;
+    });
+
+    // receive sadVote
+    this.socketInstance.on("sadVote:received", (data) => {
+      this.sadCount = data.sad;
+    });
+
+    // receive boredVote
+    this.socketInstance.on("boredVote:received", (data) => {
+      this.boredCount = data.bored;
     });
     // Update files
     this.socketInstance.on("fileChange:received", async (data) => {
@@ -481,6 +525,38 @@ export default {
       }
       this.userVotedHappy = !this.userVotedHappy;
     },
+    async voteSad() {
+      // Emit Sad Reaction
+      const sadVote = {
+        reaction: "sad",
+        uid: localStorage.uid,
+        chatroomKey: this.joinedRoom,
+      };
+      this.socketInstance.emit("sadVote", sadVote); // send sad vote to others
+
+      if (this.userVotedSad) {
+        this.sadCount -= 1;
+      } else {
+        this.sadCount += 1;
+      }
+      this.userVotedSad = !this.userVotedSad;
+    },
+    async voteBored() {
+      // Emit Bored Reaction
+      const boredVote = {
+        reaction: "bored",
+        uid: localStorage.uid,
+        chatroomKey: this.joinedRoom,
+      };
+      this.socketInstance.emit("boredVote", boredVote); // send bored vote to others
+
+      if (this.userVotedBored) {
+        this.boredCount -= 1;
+      } else {
+        this.boredCount += 1;
+      }
+      this.userVotedBored = !this.userVotedBored;
+    },
     async joinRoom(room) {
       this.socketInstance.emit("join-room", {
         roomName: room,
@@ -545,10 +621,14 @@ export default {
 
         this.happyCount = res.happy;
         this.confusedCount = res.confused;
+        this.sadCount = res.sad;
+        this.boredCount = res.bored;
       } catch (e) {
         console.log("Could not fetch counts for group vibe:", e);
         this.happyCount = 0;
         this.confusedCount = 0;
+        this.sadCount = 0;
+        this.boredCount = 0;
       }
     },
     leaveRoom() {
