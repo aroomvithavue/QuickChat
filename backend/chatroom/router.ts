@@ -28,7 +28,7 @@ router.get(
   "/",
   async (req: Request, res: Response, next: NextFunction) => {
     // Check if author query parameter was supplied
-    if (req.query.keyword !== undefined) {
+    if (req.query.keywordPassword !== undefined) {
       next();
       return;
     }
@@ -37,11 +37,14 @@ router.get(
     const response = allChatRooms.map(util.constructChatRoomResponse);
     res.status(200).json(response);
   },
-  [chatRoomValidator.doesChatRoomWithKeyExist],
+  [chatRoomValidator.doesChatRoomWithKeyExist, chatRoomValidator.isCorrectPasswordByKeyword],
   async (req: Request, res: Response) => {
-    const chatRoom = await ChatRoomCollection.findByKeyword(
-      req.query.keyword as string
-    );
+
+    const keywordPassword = req.query.keywordPassword as string;
+    const colonIndex = keywordPassword.indexOf(":");
+    const keyword = keywordPassword.slice(0, colonIndex);
+
+    const chatRoom = await ChatRoomCollection.findByKeyword(keyword);
     const response = util.constructChatRoomResponse(chatRoom);
     res.status(200).json(response);
   }
@@ -66,7 +69,13 @@ router.post(
   async (req: Request, res: Response) => {
     const days = req.body.days as string;
     const hours = req.body.hours as string;
-    const chatRoom = await ChatRoomCollection.addOne(days, hours);
+    let password = '';
+
+    if (req.body.password !== undefined && req.body.password !== null){
+      password = req.body.password as string;
+    }
+
+    const chatRoom = await ChatRoomCollection.addOne(days, hours, password);
 
     const response = util.constructChatRoomResponse(chatRoom);
     res.status(201).json(response);
@@ -104,7 +113,7 @@ router.delete(
  */
 router.patch(
   "/:chatRoomId?",
-  [chatRoomValidator.doesChatRoomExist, chatRoomValidator.isValidEdit],
+  [chatRoomValidator.doesChatRoomExist, chatRoomValidator.isValidEdit, chatRoomValidator.isCorrectPassword],
   async (req: Request, res: Response) => {
     const editType = req.body.edit as string;
 

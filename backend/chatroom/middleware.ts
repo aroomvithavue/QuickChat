@@ -11,12 +11,15 @@ const doesChatRoomWithKeyExist = async (
   res: Response,
   next: NextFunction
 ) => {
-  const chatRoom = await ChatRoomCollection.findByKeyword(
-    req.query.keyword as string
-  );
+
+  const keywordPassword = req.query.keywordPassword as string;
+  const colonIndex = keywordPassword.indexOf(":");
+  const keyword = keywordPassword.slice(0, colonIndex);
+
+  const chatRoom = await ChatRoomCollection.findByKeyword(keyword);
   if (!chatRoom) {
     res.status(404).json({
-      error: `Chat room with keyword of ${req.query.keyword} does not exist.`,
+      error: `Chat room with keyword of ${keyword} does not exist.`,
     });
     return;
   }
@@ -82,6 +85,49 @@ const isValidChatRoom = async (
 };
 
 /**
+ * Checks if the password is correct.
+ */
+ const isCorrectPassword = async (req: Request, res: Response,next: NextFunction) => {
+  
+  const predPassword = req.body.password ? req.body.password as string : '';
+  
+  const chatRoom = await ChatRoomCollection.findOne(req.params.chatRoomId);
+  const truePassword = chatRoom.password;
+
+  if (predPassword !== truePassword){
+    res.status(404).json({
+      error: "Password input does not match chat room password.",
+    });
+    return;
+  }
+
+  next();
+};
+
+/**
+ * Checks if the password is correct for chat room with given keyword.
+ */
+ const isCorrectPasswordByKeyword = async (req: Request, res: Response,next: NextFunction) => {
+
+  const keywordPassword = req.query.keywordPassword as string;
+  const colonIndex = keywordPassword.indexOf(":");
+  const keyword = keywordPassword.slice(0, colonIndex);
+  const predPassword = keywordPassword.slice(colonIndex+1);
+
+  const chatRoom = await ChatRoomCollection.findByKeyword(keyword);
+  const truePassword = chatRoom.password;
+
+  if (predPassword !== truePassword){
+    res.status(404).json({
+      error: "Password input does not match chat room password.",
+    });
+    return;
+  }
+
+  next();
+};
+
+/**
  * Checks if the new message is valid.
  */
 const isValidEdit = async (req: Request, res: Response, next: NextFunction) => {
@@ -134,5 +180,7 @@ export {
   doesChatRoomWithKeyExist,
   doesChatRoomExist,
   isValidChatRoom,
+  isCorrectPasswordByKeyword,
+  isCorrectPassword,
   isValidEdit,
 };
