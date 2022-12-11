@@ -9,7 +9,7 @@ function viewAllChatRooms(fields) {
 }
 
 function viewChatRoomByKeyword(fields) {
-  fetch(`/api/chatRooms?keywordPassword=${fields.key}:${fields.password ? fields.password : ''}`)
+  fetch(`/api/chatRooms?keyword=${fields.key}`)
     .then(showResponse)
     .catch(showResponse);
 }

@@ -108,7 +108,6 @@ class GroupVibeCollection {
     await groupVibe.save();
     return groupVibe;
   }
-  
 
   /**
    * Update a group vibe by deleting a user from a reaction.
@@ -148,10 +147,10 @@ class GroupVibeCollection {
    *
    * @param chatroomKey - keyword that corresponds to chat room
    * @param reaction - reaction
-   * @param uid - user id
+   * @param user - user
    * @returns {Promise<{happy: number, confused: number}} - the newly updated group vibe counts
    */
-   static async updateOne(chatroomKey: string, reaction: "happy" | "confused", uid: string): Promise<{happy: number, confused: number}> {
+   static async updateOne(chatroomKey: string, reaction: "happy" | "confused", user: string): Promise<{happy: number, confused: number}> {
 
     const chatroom = await ChatRoomCollection.findByKeyword(chatroomKey);
     let groupVibe = await GroupVibeModel.findOne({ chatroomId: chatroom._id });
@@ -160,53 +159,17 @@ class GroupVibeCollection {
         groupVibe = await GroupVibeCollection.addOne(chatroom._id);
     }
 
-    const reactionExists = await GroupVibeCollection.findReactionByUser(groupVibe._id, uid, reaction);
+    const reactionExists = await GroupVibeCollection.findReactionByUser(groupVibe._id, user, reaction);
 
     if (reactionExists){
-        groupVibe = await GroupVibeCollection.updateOneDelete(groupVibe._id, reaction, uid);
+        groupVibe = await GroupVibeCollection.updateOneDelete(groupVibe._id, reaction, user);
     }
     else{
-        groupVibe = await GroupVibeCollection.updateOneAdd(groupVibe._id, reaction, uid);
+        groupVibe = await GroupVibeCollection.updateOneAdd(groupVibe._id, reaction, user);
     }
     
     await groupVibe.save();
 
-    const happyCount = groupVibe.happy.length;
-    const confusedCount = groupVibe.confused.length;
-    return {happy: happyCount, confused: confusedCount};
-  }
-
-  /**
-   * Update a group vibe by deleting all reactions by a user
-   *
-   * @param chatroomKey - keyword that corresponds to chat room
-   * @param uid - user id
-   * @returns {Promise<{happy: number, confused: number}>} - the newly updated group vibe counts
-   */
-   static async deleteAllByUser(chatroomKey: string, uid: string): Promise<{happy: number, confused: number}> {
-    
-    const chatroom = await ChatRoomCollection.findByKeyword(chatroomKey);
-    let groupVibe = await GroupVibeModel.findOne({ chatroomId: chatroom._id });
-
-    if (!groupVibe || groupVibe === null){
-        groupVibe = await GroupVibeCollection.addOne(chatroom._id);
-    }
-
-    for(let i = 0; i < groupVibe.happy.length; i++){                     
-        if (groupVibe.happy[i] === uid) { 
-            groupVibe.happy.splice(i, 1); 
-            i--; 
-        }
-    }
-    for(let i = 0; i < groupVibe.confused.length; i++){                     
-        if (groupVibe.confused[i] === uid) { 
-            groupVibe.confused.splice(i, 1); 
-            i--; 
-        }
-    }
-    
-    await groupVibe.save();
-    
     const happyCount = groupVibe.happy.length;
     const confusedCount = groupVibe.confused.length;
     return {happy: happyCount, confused: confusedCount};

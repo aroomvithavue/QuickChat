@@ -8,7 +8,6 @@ export type ChatRoomResponse = {
   keyword: string;
   dateCreated: Date;
   expireAt: Date;
-  password: String;
   messages: Array<{ text: string; date: Date; author: string }>;
   files: Array<{fileId: string, date: Date}>;
 };
