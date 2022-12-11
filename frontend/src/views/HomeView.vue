@@ -1,5 +1,5 @@
 <template>
-  <main>
+  <main class="bg-base-100 text-base-content">
     <div
       class="hero min-h-screen"
       style="background-image: url(https://placeimg.com/1000/800/arch)"
