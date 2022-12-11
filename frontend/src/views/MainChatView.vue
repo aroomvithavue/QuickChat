@@ -90,7 +90,6 @@
       <!-- FilesTab Code -->
       <section
         id="filesContainer"
-        @scroll="handleScroll"
         v-if="inFilesTabView"
         class="overflow-y-auto"
       >
@@ -289,7 +288,8 @@ export default {
   updated() {
     //autoscroll to bottom of chat, if user is not scrolling up
     const container = this.$el.querySelector("#messageContainer");
-    if (!this.scrolling) container.scrollTop = container.scrollHeight;
+    if (container && !this.scrolling)
+      container.scrollTop = container.scrollHeight;
   },
   methods: {
     // send message
