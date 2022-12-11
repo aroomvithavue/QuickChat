@@ -1,5 +1,7 @@
 <template>
-  <main class="flex max-h-[95vh] my-0 w-screen bg-base-100 text-base-content">
+  <main
+    class="flex max-h-screen pt-12 my-0 w-screen bg-base-100 text-base-content"
+  >
     <!-- Side Bar Code -->
     <div class="flex flex-col w-1/4 h-full min-h-[95vh] border-r-4">
       <div v-if="joinedRoom.length === 0">
