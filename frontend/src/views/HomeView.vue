@@ -25,6 +25,22 @@
               </option>
             </select>
           </div>
+          <div class="form-control w-52 flex flex-row justify-start">
+            <label class="cursor-pointer label">
+              <span class="label-text">Password protected: </span>
+              <input
+                type="checkbox"
+                class="toggle toggle-success ml-2"
+                @click="handlePasswordToggle"
+              />
+            </label>
+          </div>
+          <input
+            v-if="showPassPrompt"
+            type="text"
+            placeholder="Password"
+            class="input w-full max-w-xs my-4 input-bordered bg-base-100 text-base-content"
+          />
           <div class="card-actions justify-end">
             <input type="submit" class="btn btn-primary" value="Create" />
           </div>
@@ -52,7 +68,15 @@
 <script>
 export default {
   name: "HomeView",
+  data() {
+    return {
+      showPassPrompt: false,
+    };
+  },
   methods: {
+    handlePasswordToggle(e) {
+      this.showPassPrompt = e.target.checked;
+    },
     handleJoin(e) {
       e.preventDefault();
       const keyword = e.target[0].value;
@@ -76,12 +100,18 @@ export default {
         (isProd
           ? "https://quickchat-api-61040.herokuapp.com/"
           : "http://localhost:3000/") + `api/chatRooms`;
+      const body = JSON.parse(e.target[0].value);
+      body.password = this.showPassPrompt ? e.target[2].value : "";
 
       const res = fetch(url, {
         method: "POST",
-        body: e.target[0].value,
+        body: JSON.stringify(body),
         headers: { "Content-Type": "application/json" },
       });
+      this.$store.commit(
+        "setPassword",
+        this.showPassPrompt ? e.target[2].value : ""
+      );
       const keyword = (await (await res).json()).keyword;
       this.$router.push({ name: "chat", params: { keyword } });
     },
