@@ -295,10 +295,8 @@ export default {
     // send message
     sendMessage() {
       const message = {
-        id: new Date().getTime(),
+        date: new Date().getTime(),
         text: this.text,
-        username: this.username,
-        userId: this.socketInstance.id,
         uid: this.uid,
         roomName: this.joinedRoom,
         author: this.username,
