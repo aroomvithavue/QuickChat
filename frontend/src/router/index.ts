@@ -2,6 +2,7 @@ import Vue from "vue";
 import VueRouter, { RouteConfig } from "vue-router";
 import HomeView from "../views/HomeView.vue";
 import ExportView from "../views/ExportView.vue";
+import store from "@/store";
 
 Vue.use(VueRouter);
 
@@ -10,6 +11,10 @@ const routes: Array<RouteConfig> = [
     path: "/",
     name: "home",
     component: HomeView,
+    beforeEnter: (to, from, next) => {
+      store.commit("setPassword", "");
+      next();
+    },
   },
   {
     path: "/:keyword",
