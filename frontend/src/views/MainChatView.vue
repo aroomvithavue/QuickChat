@@ -188,19 +188,22 @@
                 >✕</label
               >
               <form @submit="handleFileUpload" class="flex flex-col gap-4">
-                <h3 class="text-xl font-semibold">Upload file to chat</h3>
+                <h3 class="text-xl font-semibold">Upload File To Chat</h3>
                 <input
                   type="file"
                   name="file"
                   class="file-input file-input-bordered file-input-primary w-full max-w-s"
                 />
-
+                <p>
+                  Accepted File Types: jpg, txt, gif, pdf, png, tiff, or bmp
+                  under 2MB
+                </p>
                 <button
                   type="submit"
                   class="btn btn-primary max-w-xs w-24 self-end"
                 >
                   <label for="upload-modal" class="btn btn-ghost max-w-xs w-24"
-                    >Submit</label
+                    >Upload</label
                   >
                 </button>
               </form>
