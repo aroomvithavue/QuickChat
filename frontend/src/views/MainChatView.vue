@@ -10,69 +10,82 @@
 
       <div v-else>
         <div class="mt-10">
-          <h1 class="font-bold">Keyword</h1>
+          <div
+            class="tooltip tooltip-right"
+            data-tip="This keyword identifies the chat.  You can share this keyword with new members you would like to invite to join, or if use it if you would like to rejoin after leaving."
+          >
+            <h1 class="font-bold">Keyword</h1>
+          </div>
           <p>{{ joinedRoom }}</p>
         </div>
         <div class="mt-10">
           <h1 class="font-bold">Live Group Vibe</h1>
           <p class="mt-2">How are you feeling right now?</p>
           <div class="flex flex-col justify-center content-center items-center">
-            <button
-              type="button"
-              id="confused"
-              @click="voteConfused"
-              class="mt-2 p-2 text-gray-500 rounded-lg cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-bg-content dark:hover:text-white dark:hover:bg-gray-600"
-            >
-              <img
-                class="dark:invert"
-                :width="20 + Math.min(6 * this.confusedCount, 60)"
-                :height="20 + Math.min(6 * this.confusedCount, 60)"
-                src="https://img.icons8.com/ios-glyphs/80/null/question--v1.png"
-              />
-              <p v-if="this.confusedCount !== 0">{{ this.confusedCount }}</p>
-            </button>
-            <button
-              type="button"
-              id="happy"
-              @click="voteHappy"
-              class="mt-2 p-2 text-gray-500 rounded-lg cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-bg-content dark:hover:text-white dark:hover:bg-gray-600"
-            >
-              <img
-                class="dark:invert"
-                :width="20 + Math.min(6 * this.happyCount, 60)"
-                :height="20 + Math.min(6 * this.happyCount, 60)"
-                src="https://img.icons8.com/material-outlined/80/null/smiling.png"
-              />
-              <p v-if="this.happyCount !== 0">{{ this.happyCount }}</p>
-            </button>
-            <button
-              type="button"
-              id="bored"
-              @click="voteBored"
-              class="mt-2 p-2 text-gray-500 rounded-lg cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-bg-content dark:hover:text-white dark:hover:bg-gray-600"
-            >
-              <img
-                class="dark:invert"
-                :width="20 + Math.min(6 * this.boredCount, 60)"
-                :height="20 + Math.min(6 * this.boredCount, 60)"
-                src="https://img.icons8.com/windows/80/null/bored.png"
-              />
-              <p v-if="this.boredCount !== 0">{{ this.boredCount }}</p>
-            </button>
-            <button
-              type="button"
-              id="sad"
-              @click="voteSad"
-              class="mt-2 p-2 text-gray-500 rounded-lg cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-bg-content dark:hover:text-white dark:hover:bg-gray-600"
-            >
-              <img
-                class="dark:invert"
-                :width="20 + Math.min(6 * this.sadCount, 60)"
-                :height="20 + Math.min(6 * this.sadCount, 60)"
-                src="https://img.icons8.com/ios-glyphs/80/null/crying--v1.png"
-              />
-              <p v-if="this.sadCount !== 0">{{ this.sadCount }}</p>
-            </button>
+            <div class="tooltip tooltip-right" data-tip="confused">
+              <button
+                type="button"
+                id="confused"
+                @click="voteConfused"
+                class="mt-2 p-2 text-gray-500 rounded-lg cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-bg-content dark:hover:text-white dark:hover:bg-gray-600"
+              >
+                <img
+                  class="dark:invert"
+                  :width="20 + Math.min(6 * this.confusedCount, 60)"
+                  :height="20 + Math.min(6 * this.confusedCount, 60)"
+                  src="https://img.icons8.com/ios-glyphs/80/null/question--v1.png"
+                />
+                <p v-if="this.confusedCount !== 0">{{ this.confusedCount }}</p>
+              </button>
+            </div>
+            <div class="tooltip tooltip-right" data-tip="happy">
+              <button
+                type="button"
+                id="happy"
+                @click="voteHappy"
+                class="mt-2 p-2 text-gray-500 rounded-lg cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-bg-content dark:hover:text-white dark:hover:bg-gray-600"
+              >
+                <img
+                  class="dark:invert"
+                  :width="20 + Math.min(6 * this.happyCount, 60)"
+                  :height="20 + Math.min(6 * this.happyCount, 60)"
+                  src="https://img.icons8.com/material-outlined/80/null/smiling.png"
+                />
+                <p v-if="this.happyCount !== 0">{{ this.happyCount }}</p>
+              </button>
+            </div>
+            <div class="tooltip tooltip-right" data-tip="bored">
+              <button
+                type="button"
+                id="bored"
+                @click="voteBored"
+                class="mt-2 p-2 text-gray-500 rounded-lg cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-bg-content dark:hover:text-white dark:hover:bg-gray-600"
+              >
+                <img
+                  class="dark:invert"
+                  :width="20 + Math.min(6 * this.boredCount, 60)"
+                  :height="20 + Math.min(6 * this.boredCount, 60)"
+                  src="https://img.icons8.com/windows/80/null/bored.png"
+                />
+                <p v-if="this.boredCount !== 0">{{ this.boredCount }}</p>
+              </button>
+            </div>
+            <div class="tooltip tooltip-right" data-tip="sad">
+              <button
+                type="button"
+                id="sad"
+                @click="voteSad"
+                class="mt-2 p-2 text-gray-500 rounded-lg cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-bg-content dark:hover:text-white dark:hover:bg-gray-600"
+              >
+                <img
+                  class="dark:invert"
+                  :width="20 + Math.min(6 * this.sadCount, 60)"
+                  :height="20 + Math.min(6 * this.sadCount, 60)"
+                  src="https://img.icons8.com/ios-glyphs/80/null/crying--v1.png"
+                />
+                <p v-if="this.sadCount !== 0">{{ this.sadCount }}</p>
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -207,11 +220,13 @@
             </svg>
             <span class="sr-only">Send message</span>
           </button>
-          <label for="upload-modal" class="btn btn-ghost">
-            <img
-              class="dark:invert"
-              src="https://img.icons8.com/windows/32/null/file-upload.png"
-          /></label>
+          <div class="tooltip" data-tip="Upload a file to the Files Tab.">
+            <label for="upload-modal" class="btn btn-ghost">
+              <img
+                class="dark:invert"
+                src="https://img.icons8.com/windows/32/null/file-upload.png"
+            /></label>
+          </div>
           <!-- Upload file modal -->
           <input type="checkbox" id="upload-modal" class="modal-toggle" />
           <div class="modal">
