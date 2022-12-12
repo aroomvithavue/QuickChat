@@ -415,7 +415,11 @@ export default {
           ? "https://quickchat-api-61040.herokuapp.com/"
           : "http://localhost:3000/") +
         `api/chatRooms?keyword=${this.joinedRoom}`;
-      const r = await fetch(url);
+      const r = await fetch(url, {
+        method: "GET",
+        headers: { chatPassword: this.$store.state.password },
+        type: "application/json",
+      });
       const res = await r.json();
       if (!r.ok) {
         throw new Error(res.error);
