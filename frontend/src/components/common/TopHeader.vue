@@ -1,5 +1,5 @@
 <template>
-  <div class="navbar bg-base-300 h-[5vh] my-0">
+  <div class="navbar bg-base-300 h-[5vh] my-0 z-10">
     <router-link to="/" class="btn btn-ghost normal-case text-xl text-primary"
       ><img
         class="max-w-full h-auto rounded-lg w-30 h-30"
