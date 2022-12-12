@@ -1,5 +1,5 @@
 <template>
-  <main class="bg-base-100 text-base-content">
+  <main class="bg-base-100 text-base-content pt-20">
     <!-- Header Code -->
     <header class="normal-case text-xl">
       Use your browser to print or save this view.
